@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:growing_tale/core/data/dummy_data.dart';
-
-import '../../core/constants/app_constants.dart';
 
 class ProfileSection extends StatelessWidget {
   const ProfileSection({super.key});
@@ -24,7 +21,9 @@ class ProfileSection extends StatelessWidget {
                 backgroundColor: Colors.yellow,
                 child: ClipOval(
                   child: Image(
-                    image: AssetImage('assets/profile.png'),
+                    image: AssetImage(
+                      'assets/profile.png',
+                    ),
                     width: 200.w,
                     height: 200.h,
                     fit: BoxFit.cover,
@@ -41,17 +40,15 @@ class ProfileSection extends StatelessWidget {
                     children: [
                       Text(
                         '276',
-                        style: AppConstants.bodyStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 30.w,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
                       Text(
                         'image',
-                        style: AppConstants.bodyStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 20.w,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
                     ],
                   ),
@@ -59,40 +56,36 @@ class ProfileSection extends StatelessWidget {
                     children: [
                       Text(
                         '62k',
-                        style: AppConstants.bodyStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 30.w,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
                       Text(
                         'followers',
-                        style: AppConstants.bodyStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 20.w,
-                        ),
-                      )
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
                     ],
                   ),
                   Column(
                     children: [
                       Text(
                         '23',
-                        style: AppConstants.bodyStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 30.w,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
                       Text(
                         'following',
-                        style: AppConstants.bodyStyle.copyWith(
-                          color: Colors.white,
-                          fontSize: 20.w,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: Colors.white,
+                            ),
                       ),
                     ],
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ],

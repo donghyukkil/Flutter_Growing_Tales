@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:growing_tale/core/data/dummy_data.dart';
 
-import '../../core/constants/app_constants.dart';
+import '../../data/dummy_data.dart';
 
 class TagSection extends StatelessWidget {
   const TagSection({super.key});
@@ -17,7 +16,7 @@ class TagSection extends StatelessWidget {
         ),
         Text(
           'Tags',
-          style: AppConstants.bodyStyle,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         SizedBox(
           height: 10.h,
@@ -32,19 +31,21 @@ class TagSection extends StatelessWidget {
                 alignment: WrapAlignment.start,
                 spacing: 8.w,
                 runSpacing: 4.h,
-                children: dummyTags.map((item) {
-                  return Chip(
-                    backgroundColor: item['color'],
-                    label: Text(
-                      item['tag'],
-                      style: AppConstants.bodyStyle,
-                    ),
-                  );
-                }).toList(),
+                children: dummyTags.map(
+                  (item) {
+                    return Chip(
+                      backgroundColor: item['color'],
+                      label: Text(
+                        item['tag'],
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    );
+                  },
+                ).toList(),
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

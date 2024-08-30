@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:growing_tale/core/data/dummy_data.dart';
 
-import '../../core/constants/app_constants.dart';
+import '../../data/dummy_data.dart';
 
 class LatestDiarySection extends StatelessWidget {
   const LatestDiarySection({super.key});
@@ -17,29 +16,30 @@ class LatestDiarySection extends StatelessWidget {
         ),
         Text(
           'Latest Diary',
-          style: AppConstants.bodyStyle,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         SizedBox(
           height: 110.h,
           child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: dummyDiary.length,
-              itemBuilder: (context, index) {
-                final item = dummyDiary[index];
+            scrollDirection: Axis.horizontal,
+            itemCount: dummyDiary.length,
+            itemBuilder: (context, index) {
+              final item = dummyDiary[index];
 
-                return Container(
-                  width: 120.w,
-                  margin: EdgeInsets.fromLTRB(0, 0, 10.w, 0),
-                  decoration: (BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        item['image']!,
-                      ),
+              return Container(
+                width: 120.w,
+                margin: EdgeInsets.fromLTRB(0, 0, 10.w, 0),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      item['image']!,
                     ),
-                  )),
-                );
-              }),
-        )
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
