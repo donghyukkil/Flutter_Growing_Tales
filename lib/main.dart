@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   final List<Widget> _pages = [
     LandingPage(),
     ProfileScreen(),
+    FollowsScreen(),
   ];
 
   void _onTabTapped(int index) {
@@ -44,7 +45,9 @@ class _MyAppState extends State<MyApp> {
             theme: AppTheme.lightTheme,
             home: Scaffold(
               appBar: AppBar(
-                title: Text('Growing Tales'),
+                title: Text(
+                  'Growing Tales',
+                ),
               ),
               body: _pages[_currentIndex],
               bottomNavigationBar: CustomBottomNavigationBar(
