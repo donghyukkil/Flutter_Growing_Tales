@@ -33,8 +33,13 @@ class AppTheme {
           fontWeight: FontWeight.normal,
           color: Colors.black,
         ),
-        bodySmall: GoogleFonts.nerkoOne(
+        bodyMedium: GoogleFonts.nerkoOne(
           fontSize: 20.sp,
+          fontWeight: FontWeight.normal,
+          color: Colors.black,
+        ),
+        bodySmall: GoogleFonts.nerkoOne(
+          fontSize: 13.sp,
           fontWeight: FontWeight.normal,
           color: Colors.black,
         ),
