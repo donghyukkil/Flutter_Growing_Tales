@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:growing_tales/core/theme/custom_theme_extension.dart';
-import 'package:growing_tales/data/dummy_data.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/widgets/user_info_tile.dart';
+import '../../core/theme/custom_theme_extension.dart';
+import '../../data/dummy_data.dart';
 
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
@@ -25,6 +26,7 @@ class StatisticsScreen extends StatelessWidget {
               );
             },
           ),
+          // 사용자 찾기 아이콘 구현하기
           TableCalendar(
             focusedDay: DateTime.now(),
             firstDay: DateTime.now().subtract(
@@ -38,11 +40,9 @@ class StatisticsScreen extends StatelessWidget {
               ),
             ),
             calendarStyle: CalendarStyle(
-              withinRangeTextStyle: Theme.of(context).textTheme.bodySmall!,
-              rangeEndTextStyle: Theme.of(context).textTheme.bodySmall!,
-              defaultTextStyle: Theme.of(context).textTheme.bodySmall!,
-              weekendTextStyle: Theme.of(context).textTheme.bodySmall!,
-              weekNumberTextStyle: Theme.of(context).textTheme.bodySmall!,
+              // withinRangeTextStyle: Theme.of(context).textTheme.bodySmall!,
+              // rangeEndTextStyle: Theme.of(context).textTheme.bodySmall!,
+              // defaultTextStyle: Theme.of(context).textTheme.bodySmall!,
               todayTextStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -63,28 +63,28 @@ class StatisticsScreen extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               cellMargin: EdgeInsets.all(
-                4.0,
+                4.w,
               ),
             ),
             headerStyle: HeaderStyle(
               titleTextStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontSize: 16,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
                   ),
               formatButtonVisible: false,
             ),
             daysOfWeekStyle: DaysOfWeekStyle(
               weekdayStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontSize: 15,
+                    fontSize: 15.sp,
                   ),
               weekendStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontSize: 15,
+                    fontSize: 15.sp,
                     color: Colors.red,
                   ),
             ),
           ),
           SizedBox(
-            height: 25,
+            height: 25.h,
           ),
           Expanded(
             child: Scrollbar(

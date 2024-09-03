@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/widgets/custom_circle_avatar.dart';
+
 class ProfileSection extends StatelessWidget {
   const ProfileSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       height: 300.h,
       color: Colors.blue,
       child: Column(
@@ -15,20 +16,9 @@ class ProfileSection extends StatelessWidget {
         children: [
           Column(
             children: [
-              CircleAvatar(
-                radius: 80.r,
-                foregroundColor: Colors.yellow,
-                backgroundColor: Colors.yellow,
-                child: ClipOval(
-                  child: Image(
-                    image: AssetImage(
-                      'assets/profile.png',
-                    ),
-                    width: 200.w,
-                    height: 200.h,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              CustomCircleAvatar(
+                imageUrl: 'assets/profile.png',
+                size: 150.w,
               ),
               SizedBox(
                 height: 20.h,

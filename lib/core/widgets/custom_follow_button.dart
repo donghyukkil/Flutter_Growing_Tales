@@ -50,7 +50,6 @@ class CustomFollowButton extends StatelessWidget {
             color: borderColor,
             width: borderWidth,
           ),
-          // 아래 쪽만 테두리 굵게 하기.
           bottom: BorderSide(
             color: borderColor,
             width: borderWidth + 3,
@@ -64,7 +63,7 @@ class CustomFollowButton extends StatelessWidget {
           style: ButtonStyle(
             padding: WidgetStateProperty.all(
               EdgeInsets.symmetric(
-                horizontal: 4.w,
+                horizontal: 2.w,
                 vertical: 2.h,
               ),
             ),
@@ -78,7 +77,7 @@ class CustomFollowButton extends StatelessWidget {
           onPressed: onPressed,
           child: Text(
             text,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
       ),

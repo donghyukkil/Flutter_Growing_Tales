@@ -10,6 +10,7 @@ class UserInfoTile extends StatelessWidget {
   final String region;
   final String buttonText;
   final VoidCallback onButtonPressed;
+  final bool showBorder;
 
   const UserInfoTile({
     super.key,
@@ -18,21 +19,38 @@ class UserInfoTile extends StatelessWidget {
     required this.region,
     required this.buttonText,
     required this.onButtonPressed,
+    this.showBorder = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 10.0.h,
+      padding: EdgeInsets.only(
+        bottom: 10.0.h,
       ),
       child: Container(
         height: 100.h,
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
-            width: 2.w,
-          ),
+          border: showBorder
+              ? Border(
+                  top: BorderSide(
+                    color: Colors.black,
+                    width: 2,
+                  ),
+                  left: BorderSide(
+                    color: Colors.black,
+                    width: 2,
+                  ),
+                  right: BorderSide(
+                    color: Colors.black,
+                    width: 2,
+                  ),
+                  bottom: BorderSide(
+                    color: Colors.black,
+                    width: 7,
+                  ),
+                )
+              : null,
           borderRadius: BorderRadius.circular(
             (10.r),
           ),
@@ -50,29 +68,34 @@ class UserInfoTile extends StatelessWidget {
                 size: 80.r,
               ),
               SizedBox(
-                width: 10.w,
+                width: 2.w,
               ),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       name,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      softWrap: false,
                     ),
                     Text(
                       region,
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontSize: 13.sp,
-                          ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
               ),
+              SizedBox(
+                width: 15.w,
+              ),
               CustomFollowButton(
                 text: buttonText,
                 onPressed: onButtonPressed,
-                width: 60.w,
+                width: 40.w,
                 height: 30.h,
                 backgroundColor: Color(
                   0xFFFFBD11,
