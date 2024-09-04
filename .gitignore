@@ -73,3 +73,9 @@ ssg/.vscode
 ssg/.git-metadata
 ssg/_site
 ssg/.sass-cache
+
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+firebase.json
+lib/core/config/firebase_options.dart

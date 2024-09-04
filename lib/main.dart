@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
+import 'core/config/firebase_options.dart';
 import '/core/theme/app_theme.dart';
 import '/core/widgets/custom_bottom_navigation_bar.dart';
 import 'ui/views/statistics_screen.dart';
@@ -8,9 +11,24 @@ import 'ui/views/landing_screen.dart';
 import 'ui/views/profile_screen.dart';
 import 'ui/views/follows_screen.dart';
 import 'ui/views/community_screen.dart';
+import 'ui/view_models/users_view_model.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  // Firebase 초기화를 위해 Flutter 엔진을 미리 준비
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Firebase 초기화
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (_) => UsersViewModel(),
+      )
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {

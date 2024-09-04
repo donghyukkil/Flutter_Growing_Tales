@@ -45,5 +45,29 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Google Sign-In 설정 추가 -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.210253411868-qq5jvek1utmqhsbajkh9eos0137u1hsq</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- iOS에서 Google Sign-In을 사용할 때 필요한 추가 설정 -->
+	<key>GoogleSignIn</key>
+	<dict>
+		<key>ClientId</key>
+		<string>210253411868-g1r3q9l1307huunoie28vmoc26h5pk3l.apps.googleusercontent.com</string>
+	</dict>
+
+	<!-- 키보드나 터치바 등을 통한 간접 입력 이벤트를 지원 -->
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

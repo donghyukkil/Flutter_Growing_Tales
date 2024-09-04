@@ -3,6 +3,7 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services" // Google 서비스 플러그인 추가
 }
 
 def localProperties = new Properties()
@@ -55,4 +56,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation 'com.google.firebase:firebase-auth:22.0.0' // Firebase Auth 추가
+    implementation 'com.google.android.gms:play-services-auth:20.6.0' // Google Sign-In 추가
 }
