@@ -10,6 +10,7 @@ class LoginState with _$LoginState {
     @Default(false) bool isLoading,
     User? user,
     String? errorMessage,
+    String? imageUrl,
     @Default([]) List<User> follows,
   }) = _LoginState;
 }

@@ -22,6 +22,8 @@ class UsersViewModel extends ChangeNotifier {
         _updateState(
           user: user,
           errorMessage: null,
+          isLoading: false,
+          updateUser: true,
         );
 
         await fetchFollows(user.followedUsers);
@@ -41,10 +43,13 @@ class UsersViewModel extends ChangeNotifier {
 
   Future<void> logout() async {
     await _userRepository.signOut();
+
     _updateState(
       user: null,
       follows: [],
       errorMessage: null,
+      imageUrl: '',
+      updateUser: true,
     );
   }
 
@@ -75,20 +80,28 @@ class UsersViewModel extends ChangeNotifier {
     }
   }
 
-  // 여기도 LoginState로 업데이트?
   void _updateState({
     bool? isLoading,
     User? user,
     String? errorMessage,
     List<User>? follows,
+    String? imageUrl,
+    bool updateUser =
+        false, // 상태 관리용 local flags. 상태 객체에는 포함되지 않고 상태가 업데이트 유무를 결정.
   }) {
-    _state = state.copyWith(
-      isLoading: isLoading ?? _state.isLoading,
-      user: user ?? _state.user,
-      errorMessage: errorMessage,
-      follows: follows ?? _state.follows,
+    print(
+      '1. Updating state: isLoading=$isLoading, user=$user, errorMessage=$errorMessage, follows=$follows, imageUrl=$imageUrl',
     );
 
+    _state = state.copyWith(
+      isLoading: isLoading ?? _state.isLoading,
+      user: updateUser ? user : _state.user,
+      errorMessage: errorMessage,
+      follows: follows ?? _state.follows,
+      imageUrl: imageUrl ?? _state.imageUrl,
+    );
+
+    print('2. Updated state: $_state');
     notifyListeners();
   }
 }

@@ -19,6 +19,7 @@ mixin _$LoginState {
   bool get isLoading => throw _privateConstructorUsedError;
   User? get user => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  String? get imageUrl => throw _privateConstructorUsedError;
   List<User> get follows => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -33,7 +34,11 @@ abstract class $LoginStateCopyWith<$Res> {
       _$LoginStateCopyWithImpl<$Res, LoginState>;
   @useResult
   $Res call(
-      {bool isLoading, User? user, String? errorMessage, List<User> follows});
+      {bool isLoading,
+      User? user,
+      String? errorMessage,
+      String? imageUrl,
+      List<User> follows});
 
   $UserCopyWith<$Res>? get user;
 }
@@ -54,6 +59,7 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
     Object? isLoading = null,
     Object? user = freezed,
     Object? errorMessage = freezed,
+    Object? imageUrl = freezed,
     Object? follows = null,
   }) {
     return _then(_value.copyWith(
@@ -68,6 +74,10 @@ class _$LoginStateCopyWithImpl<$Res, $Val extends LoginState>
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       follows: null == follows
           ? _value.follows
@@ -98,7 +108,11 @@ abstract class _$$LoginStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool isLoading, User? user, String? errorMessage, List<User> follows});
+      {bool isLoading,
+      User? user,
+      String? errorMessage,
+      String? imageUrl,
+      List<User> follows});
 
   @override
   $UserCopyWith<$Res>? get user;
@@ -118,6 +132,7 @@ class __$$LoginStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? user = freezed,
     Object? errorMessage = freezed,
+    Object? imageUrl = freezed,
     Object? follows = null,
   }) {
     return _then(_$LoginStateImpl(
@@ -132,6 +147,10 @@ class __$$LoginStateImplCopyWithImpl<$Res>
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
               as String?,
       follows: null == follows
           ? _value._follows
@@ -148,6 +167,7 @@ class _$LoginStateImpl implements _LoginState {
       {this.isLoading = false,
       this.user,
       this.errorMessage,
+      this.imageUrl,
       final List<User> follows = const []})
       : _follows = follows;
 
@@ -158,6 +178,8 @@ class _$LoginStateImpl implements _LoginState {
   final User? user;
   @override
   final String? errorMessage;
+  @override
+  final String? imageUrl;
   final List<User> _follows;
   @override
   @JsonKey()
@@ -169,7 +191,7 @@ class _$LoginStateImpl implements _LoginState {
 
   @override
   String toString() {
-    return 'LoginState(isLoading: $isLoading, user: $user, errorMessage: $errorMessage, follows: $follows)';
+    return 'LoginState(isLoading: $isLoading, user: $user, errorMessage: $errorMessage, imageUrl: $imageUrl, follows: $follows)';
   }
 
   @override
@@ -182,12 +204,14 @@ class _$LoginStateImpl implements _LoginState {
             (identical(other.user, user) || other.user == user) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
             const DeepCollectionEquality().equals(other._follows, _follows));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, isLoading, user, errorMessage,
-      const DeepCollectionEquality().hash(_follows));
+      imageUrl, const DeepCollectionEquality().hash(_follows));
 
   @JsonKey(ignore: true)
   @override
@@ -201,6 +225,7 @@ abstract class _LoginState implements LoginState {
       {final bool isLoading,
       final User? user,
       final String? errorMessage,
+      final String? imageUrl,
       final List<User> follows}) = _$LoginStateImpl;
 
   @override
@@ -209,6 +234,8 @@ abstract class _LoginState implements LoginState {
   User? get user;
   @override
   String? get errorMessage;
+  @override
+  String? get imageUrl;
   @override
   List<User> get follows;
   @override

@@ -26,6 +26,7 @@ mixin _$User {
   String get email => throw _privateConstructorUsedError;
   String get region => throw _privateConstructorUsedError;
   List<String> get followedUsers => throw _privateConstructorUsedError;
+  List<String> get followingUsers => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +44,8 @@ abstract class $UserCopyWith<$Res> {
       String name,
       String email,
       String region,
-      List<String> followedUsers});
+      List<String> followedUsers,
+      List<String> followingUsers});
 }
 
 /// @nodoc
@@ -65,6 +67,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? email = null,
     Object? region = null,
     Object? followedUsers = null,
+    Object? followingUsers = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -91,6 +94,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.followedUsers
           : followedUsers // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      followingUsers: null == followingUsers
+          ? _value.followingUsers
+          : followingUsers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -108,7 +115,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       String name,
       String email,
       String region,
-      List<String> followedUsers});
+      List<String> followedUsers,
+      List<String> followingUsers});
 }
 
 /// @nodoc
@@ -127,6 +135,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? email = null,
     Object? region = null,
     Object? followedUsers = null,
+    Object? followingUsers = null,
   }) {
     return _then(_$UserImpl(
       id: null == id
@@ -153,6 +162,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value._followedUsers
           : followedUsers // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      followingUsers: null == followingUsers
+          ? _value._followingUsers
+          : followingUsers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -162,12 +175,14 @@ class __$$UserImplCopyWithImpl<$Res>
 class _$UserImpl implements _User {
   const _$UserImpl(
       {required this.id,
-      required this.imageUrl,
-      required this.name,
-      required this.email,
-      required this.region,
-      final List<String> followedUsers = const []})
-      : _followedUsers = followedUsers;
+      this.imageUrl = '',
+      this.name = '',
+      this.email = '',
+      this.region = '',
+      final List<String> followedUsers = const [],
+      final List<String> followingUsers = const []})
+      : _followedUsers = followedUsers,
+        _followingUsers = followingUsers;
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -175,12 +190,16 @@ class _$UserImpl implements _User {
   @override
   final String id;
   @override
+  @JsonKey()
   final String imageUrl;
   @override
+  @JsonKey()
   final String name;
   @override
+  @JsonKey()
   final String email;
   @override
+  @JsonKey()
   final String region;
   final List<String> _followedUsers;
   @override
@@ -191,9 +210,18 @@ class _$UserImpl implements _User {
     return EqualUnmodifiableListView(_followedUsers);
   }
 
+  final List<String> _followingUsers;
+  @override
+  @JsonKey()
+  List<String> get followingUsers {
+    if (_followingUsers is EqualUnmodifiableListView) return _followingUsers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_followingUsers);
+  }
+
   @override
   String toString() {
-    return 'User(id: $id, imageUrl: $imageUrl, name: $name, email: $email, region: $region, followedUsers: $followedUsers)';
+    return 'User(id: $id, imageUrl: $imageUrl, name: $name, email: $email, region: $region, followedUsers: $followedUsers, followingUsers: $followingUsers)';
   }
 
   @override
@@ -208,13 +236,22 @@ class _$UserImpl implements _User {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.region, region) || other.region == region) &&
             const DeepCollectionEquality()
-                .equals(other._followedUsers, _followedUsers));
+                .equals(other._followedUsers, _followedUsers) &&
+            const DeepCollectionEquality()
+                .equals(other._followingUsers, _followingUsers));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, imageUrl, name, email,
-      region, const DeepCollectionEquality().hash(_followedUsers));
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      imageUrl,
+      name,
+      email,
+      region,
+      const DeepCollectionEquality().hash(_followedUsers),
+      const DeepCollectionEquality().hash(_followingUsers));
 
   @JsonKey(ignore: true)
   @override
@@ -233,11 +270,12 @@ class _$UserImpl implements _User {
 abstract class _User implements User {
   const factory _User(
       {required final String id,
-      required final String imageUrl,
-      required final String name,
-      required final String email,
-      required final String region,
-      final List<String> followedUsers}) = _$UserImpl;
+      final String imageUrl,
+      final String name,
+      final String email,
+      final String region,
+      final List<String> followedUsers,
+      final List<String> followingUsers}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -253,6 +291,8 @@ abstract class _User implements User {
   String get region;
   @override
   List<String> get followedUsers;
+  @override
+  List<String> get followingUsers;
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>
