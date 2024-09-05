@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 
 import '../../core/widgets/user_info_tile.dart';
 import '../../core/theme/custom_theme_extension.dart';
+import '../../core/utils/dialog_utils.dart';
+import '../../core/constants/app_colors.dart';
+
 import '../../data/dummy_data.dart';
 import '../../ui/view_models/users_view_model.dart';
 
@@ -56,17 +59,12 @@ class StatisticsScreen extends StatelessWidget {
               ),
             ),
             calendarStyle: CalendarStyle(
-              // withinRangeTextStyle: Theme.of(context).textTheme.bodySmall!,
-              // rangeEndTextStyle: Theme.of(context).textTheme.bodySmall!,
-              // defaultTextStyle: Theme.of(context).textTheme.bodySmall!,
               todayTextStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
               todayDecoration: BoxDecoration(
-                color: Color(
-                  0xFFFFBD11,
-                ),
+                color: AppColors.followButtonColor,
                 shape: BoxShape.circle,
               ),
               selectedTextStyle:
@@ -129,35 +127,4 @@ class StatisticsScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-void _showLoginDialog(BuildContext context) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login Required'),
-          content: Text('Please log in to continue'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                final userViewModel = context.read<UsersViewModel>();
-                await userViewModel.loginWithGoogle();
-
-                if (userViewModel.currentUser != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Logged in successfully')),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Login failed')));
-                }
-              },
-              child: Text(
-                'Login',
-              ),
-            )
-          ],
-        );
-      });
 }

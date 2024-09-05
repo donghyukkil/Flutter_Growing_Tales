@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../widgets/custom_circle_avatar.dart';
 import '../widgets/custom_follow_button.dart';
+import '../constants/app_colors.dart';
 
 class UserInfoTile extends StatelessWidget {
   final String imageUrl;
@@ -97,9 +98,7 @@ class UserInfoTile extends StatelessWidget {
                 onPressed: onButtonPressed,
                 width: 40.w,
                 height: 30.h,
-                backgroundColor: Color(
-                  0xFFFFBD11,
-                ),
+                backgroundColor: AppColors.followButtonColor,
                 textColor: Colors.black,
                 borderColor: Colors.black,
                 borderRadius: 10.r,
