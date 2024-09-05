@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/widgets/user_info_tile.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../data/dummy_data.dart';
+import '../../ui/view_models/users_view_model.dart';
 
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
@@ -15,18 +17,32 @@ class StatisticsScreen extends StatelessWidget {
       padding: Theme.of(context).paddingHorizontal20Vertical10,
       child: Column(
         children: [
-          UserInfoTile(
-            imageUrl: 'assets/dummy1.png',
-            name: 'Login plz',
-            region: 'Find your loves',
-            buttonText: 'Login',
-            onButtonPressed: () {
-              print(
-                'Login',
+          Consumer<UsersViewModel>(
+            builder: (context, userViewModel, child) {
+              final user = userViewModel.state.user;
+
+              return UserInfoTile(
+                imageUrl: user?.imageUrl ?? 'assets/dummy1.png',
+                name: user?.name ?? 'Login plz',
+                region: user?.region ?? 'Find your loves',
+                buttonText: user == null ? 'Login' : 'Logout',
+                onButtonPressed: () {
+                  if (user == null) {
+                    _showLoginDialog(context);
+                  } else {
+                    userViewModel.logout();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Logged out successfully,'),
+                      ),
+                    );
+                  }
+                },
               );
             },
           ),
-          // 사용자 찾기 아이콘 구현하기
+          //todo 사용자 찾기 아이콘 구현하기
           TableCalendar(
             focusedDay: DateTime.now(),
             firstDay: DateTime.now().subtract(
@@ -113,4 +129,35 @@ class StatisticsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showLoginDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login Required'),
+          content: Text('Please log in to continue'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                final userViewModel = context.read<UsersViewModel>();
+                await userViewModel.loginWithGoogle();
+
+                if (userViewModel.currentUser != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Logged in successfully')),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Login failed')));
+                }
+              },
+              child: Text(
+                'Login',
+              ),
+            )
+          ],
+        );
+      });
 }

@@ -22,9 +22,9 @@ class CustomCircleAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black,
         image: DecorationImage(
-          image: AssetImage(
-            imageUrl,
-          ),
+          image: imageUrl.startsWith('http')
+              ? NetworkImage(imageUrl)
+              : AssetImage(imageUrl),
           fit: BoxFit.cover,
         ),
         shape: BoxShape.circle,

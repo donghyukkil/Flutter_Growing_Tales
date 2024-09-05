@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/widgets/custom_circle_avatar.dart';
+import '../../ui/view_models/users_view_model.dart';
 
 class ProfileSection extends StatelessWidget {
   const ProfileSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userViewModel = Provider.of<UsersViewModel>(context);
+    final user = userViewModel.state.user;
+
     return Container(
       height: 300.h,
       color: Colors.blue,
@@ -17,7 +22,7 @@ class ProfileSection extends StatelessWidget {
           Column(
             children: [
               CustomCircleAvatar(
-                imageUrl: 'assets/profile.png',
+                imageUrl: user?.imageUrl ?? 'assets/profile.png',
                 size: 150.w,
               ),
               SizedBox(
@@ -35,7 +40,7 @@ class ProfileSection extends StatelessWidget {
                             ),
                       ),
                       Text(
-                        'image',
+                        'Diarys',
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: Colors.white,
                             ),
