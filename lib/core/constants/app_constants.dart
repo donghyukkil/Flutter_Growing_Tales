@@ -30,4 +30,8 @@ class AppConstants {
       color: Colors.black,
     ),
   );
+
+  static final googleStyle = GoogleFonts.roboto(
+    textStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+  );
 }

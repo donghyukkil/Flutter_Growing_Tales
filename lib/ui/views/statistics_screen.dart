@@ -10,6 +10,7 @@ import '../../core/constants/app_colors.dart';
 
 import '../../data/dummy_data.dart';
 import '../../ui/view_models/users_view_model.dart';
+import '../../ui/views/landing_screen.dart';
 
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
@@ -31,7 +32,12 @@ class StatisticsScreen extends StatelessWidget {
                 buttonText: user == null ? 'Login' : 'Logout',
                 onButtonPressed: () {
                   if (user == null) {
-                    _showLoginDialog(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LandingPage(),
+                      ),
+                    );
                   } else {
                     userViewModel.logout();
 
