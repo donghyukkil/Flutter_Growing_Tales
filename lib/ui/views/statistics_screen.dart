@@ -8,8 +8,8 @@ import '../../core/theme/custom_theme_extension.dart';
 import '../../core/utils/dialog_utils.dart';
 import '../../core/constants/app_colors.dart';
 
-import '../../data/dummy_data.dart';
 import '../../ui/view_models/users_view_model.dart';
+import '../../ui/view_models/diary_view_model.dart';
 import '../../ui/views/landing_screen.dart';
 
 class StatisticsScreen extends StatelessWidget {
@@ -107,26 +107,51 @@ class StatisticsScreen extends StatelessWidget {
             height: 25.h,
           ),
           Expanded(
-            child: Scrollbar(
-              thumbVisibility: true,
-              child: ListView.builder(
-                itemCount: dummyDiary.length,
-                itemBuilder: (context, index) {
-                  final diary = dummyDiary[index];
+            child: Consumer<DiaryViewModel>(
+              builder: (context, diaryViewModel, child) {
+                final userId =
+                    context.read<UsersViewModel>().currentUser?.id ?? '';
 
-                  return UserInfoTile(
-                    imageUrl: diary['image']!,
-                    name: diary['title']!,
-                    region: 'read me more...',
-                    buttonText: 'View',
-                    onButtonPressed: () {
-                      print(
-                        'Viewing ${diary['title']}',
+                if (userId.isNotEmpty &&
+                    diaryViewModel.state.userDiaries.isEmpty) {
+                  // issue: notifiyListener() method was called during the build phase of the widget tree.
+                  // In Flutter updates to the UI should be done outside the bulild pross to avoid confilcts with ongoing rendering cycle
+                  // -> solution: Delay the state change until after build.
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    diaryViewModel.fetchDiariesByUserId(
+                        userId); // to delay state changes unitl after the current frame is build;
+                  });
+                }
+
+                final diaries = diaryViewModel.state.userDiaries;
+
+                //todo 계속 네트워크 요청됨.
+                // print(diaries);
+
+                if (diaries.isEmpty) {
+                  return Center(
+                    child: Text('No Diareis Found'),
+                  );
+                }
+
+                return Scrollbar(
+                  thumbVisibility: true,
+                  child: ListView.builder(
+                    itemCount: diaries.length,
+                    itemBuilder: (context, index) {
+                      final diary = diaries[index];
+
+                      return UserInfoTile(
+                        imageUrl: diary.imageUrl,
+                        name: diary.title,
+                        region: diary.content,
+                        buttonText: 'View',
+                        onButtonPressed: () {},
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ),
         ],

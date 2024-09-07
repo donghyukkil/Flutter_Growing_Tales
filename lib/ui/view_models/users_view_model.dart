@@ -7,8 +7,9 @@ import '../../data/repositories/user_repository.dart';
 class UsersViewModel extends ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
   LoginState _state = const LoginState();
-  LoginState get state => _state;
+  final Map<String, User> _userCache = {};
 
+  LoginState get state => _state;
   User? get currentUser => _state.user;
 
   // Google Sign-In을 통해 로그인 처리
@@ -68,6 +69,11 @@ class UsersViewModel extends ChangeNotifier {
 
       List<User> follows = await _userRepository.fetchFollows(followedUserIds);
 
+      // Cache the fetched users.
+      for (var user in follows) {
+        _userCache[user.id] = user;
+      }
+
       _updateState(
         follows: follows,
         isLoading: false,
@@ -77,6 +83,27 @@ class UsersViewModel extends ChangeNotifier {
         errorMessage: 'Failed to fetch follows: $e',
         isLoading: false,
       );
+    }
+  }
+
+  Future<User?> getUserById(String userId) async {
+    if (_userCache.containsKey(userId)) {
+      //todo.컨텐츠 내용달라지면 업데이트로직.
+      print('testcache-----------------');
+      return _userCache[userId];
+    }
+    try {
+      final user = await _userRepository.fetchUserById(userId);
+
+      if (user != null) {
+        _userCache[userId] = user;
+      }
+
+      return user;
+    } catch (e) {
+      print('Error fetch user by Id: $e');
+
+      return null;
     }
   }
 

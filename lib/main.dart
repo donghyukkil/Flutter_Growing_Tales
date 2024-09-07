@@ -12,6 +12,7 @@ import 'ui/views/profile_screen.dart';
 import 'ui/views/follows_screen.dart';
 import 'ui/views/community_screen.dart';
 import 'ui/view_models/users_view_model.dart';
+import 'ui/view_models/diary_view_model.dart';
 
 void main() async {
   // Firebase 초기화를 위해 Flutter 엔진을 미리 준비
@@ -25,7 +26,8 @@ void main() async {
     providers: [
       ChangeNotifierProvider(
         create: (_) => UsersViewModel(),
-      )
+      ),
+      ChangeNotifierProvider(create: (_) => DiaryViewModel())
     ],
     child: const MyApp(),
   ));

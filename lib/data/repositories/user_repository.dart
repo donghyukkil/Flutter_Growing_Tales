@@ -92,4 +92,20 @@ class UserRepository {
       return [];
     }
   }
+
+  Future<User?> fetchUserById(String userId) async {
+    try {
+      final doc = await _firestoreService.getUserDoc(userId);
+
+      if (doc.exists) {
+        return User.fromJson(doc.data() as Map<String, dynamic>);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user By Id:$e');
+
+      return null;
+    }
+  }
 }

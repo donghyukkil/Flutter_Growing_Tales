@@ -65,6 +65,8 @@ class UserDiaryTile extends StatelessWidget {
             child: Text(
               diaryContent,
               style: Theme.of(context).textTheme.bodySmall,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(
