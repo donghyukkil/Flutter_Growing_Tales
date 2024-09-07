@@ -21,4 +21,8 @@ class FirestoreService {
   Future<QuerySnapshot> fetchUsersByIds(List<String> userIds) {
     return _firestore.collection('users').where('name', whereIn: userIds).get();
   }
+
+  CollectionReference getCollection(String path) {
+    return _firestore.collection(path);
+  }
 }

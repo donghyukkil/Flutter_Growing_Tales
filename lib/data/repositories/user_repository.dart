@@ -1,7 +1,6 @@
 // UserRepository: 데이터 접근 계층으로서, 사용자 인증 및 Firestore와의 데이터 상호작용만을 담당.
 // UserRepository는 데이터의 저장, 업데이트, 삭제 등 CRUD 작업을 책임.
 // 상태 관리 로직을 포함 X -> ViewModel or Provider로 처리. (ViewModel이 상태 관리와 UI 상호작용).
-
 // The UserRepository class you provided is responsible for interacting with the Firebase services, specifically handling user authentication via Google Sign-In and managing user data stored in Firestore.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,9 +10,14 @@ import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
 
 class UserRepository {
-  //todo: AuthService 인스턴스 생성 ->  DI vs 인스턴스 생성(싱글톤인 경우라면)
-  final AuthService _authService = AuthService();
-  final FirestoreService _firestoreService = FirestoreService();
+  final AuthService _authService;
+  final FirestoreService _firestoreService;
+
+  UserRepository({
+    required AuthService authservice,
+    required FirestoreService firestoreService,
+  })  : _authService = authservice,
+        _firestoreService = firestoreService;
 
   Future<User?> signInWithGoogle() async {
     try {

@@ -5,7 +5,7 @@ import '../../data/models/diary_state.dart';
 import '../../data/repositories/diary_repository.dart';
 
 class DiaryViewModel extends ChangeNotifier {
-  final DiaryRepository _diaryRepository = DiaryRepository();
+  final DiaryRepository _diaryRepository;
 
   // Using DiaryState instead of individual lists encapsulates all these variable.
   // This approachs keeps the data representaion(Diary) distinct from the application`s UI state (DiarayStatE)
@@ -14,15 +14,12 @@ class DiaryViewModel extends ChangeNotifier {
   // final List<Diary> _followedUserDiaries = [];
   DiaryState _state = DiaryState();
 
-  DiaryViewModel();
-
-  // List<Diary> get diaries => _diaries;
-  // List<Diary> get followedUserDiaries => _followedUserDiaries;
+  DiaryViewModel({required DiaryRepository diaryRepository})
+      : _diaryRepository = diaryRepository;
 
   DiaryState get state => _state;
 
   Future<void> fetchDiariesByUserId(String userId) async {
-    // _diaries = await _diaryRepository.getDiariesByUserId(userId);
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
 
@@ -44,7 +41,6 @@ class DiaryViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchAllDiaries() async {
-    // _diaries = await _diaryRepository.getAllDiaries();
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
 
@@ -68,9 +64,6 @@ class DiaryViewModel extends ChangeNotifier {
   }
 
   Future<void> addDiary(Diary diary) async {
-    // await _diaryRepository.addDiary(diary);
-    // await fetchDiariesByUserId(diary.userId);
-
     _state = _state.copyWith(isLoading: true);
     notifyListeners();
 

@@ -2,20 +2,23 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../data/services/firestore_service.dart';
 import '../models/diary.dart';
 
 class DiaryRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirestoreService _firestoreService;
+
+  DiaryRepository(this._firestoreService);
 
   Future<List<Diary>> getDiariesByUserId(String userId) async {
     try {
-      final querySnapshot = await _firestore
-          .collection('diaries')
+      final querySnapshot = await _firestoreService
+          .getCollection('diaries')
           .where('userId', isEqualTo: userId)
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Diary.fromJson(doc.data()))
+          .map((doc) => Diary.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
       print('Error getting diaries: $e');
@@ -26,10 +29,11 @@ class DiaryRepository {
 
   Future<List<Diary>> getAllDiaries() async {
     try {
-      final querySnapshot = await _firestore.collection('diaries').get();
+      final querySnapshot =
+          await _firestoreService.getCollection('diaries').get();
 
       return querySnapshot.docs
-          .map((doc) => Diary.fromJson(doc.data()))
+          .map((doc) => Diary.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
       print('Error getting all diaries: $e');
@@ -40,7 +44,7 @@ class DiaryRepository {
 
   Future<void> addDiary(Diary diary) async {
     try {
-      await _firestore.collection('diaries').add(diary.toJson());
+      await _firestoreService.getCollection('diaries').add(diary.toJson());
     } catch (e) {
       print('Error adding diary: $e');
     }

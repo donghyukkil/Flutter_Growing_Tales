@@ -6,6 +6,10 @@ import 'package:provider/provider.dart';
 import 'core/config/firebase_options.dart';
 import '/core/theme/app_theme.dart';
 import '/core/widgets/custom_bottom_navigation_bar.dart';
+import 'data/services/firestore_service.dart';
+import 'data/services/auth_service.dart';
+import 'data/repositories/diary_repository.dart';
+import 'data/repositories/user_repository.dart';
 import 'ui/views/statistics_screen.dart';
 import 'ui/views/landing_screen.dart';
 import 'ui/views/profile_screen.dart';
@@ -24,10 +28,27 @@ void main() async {
   );
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(
-        create: (_) => UsersViewModel(),
-      ),
-      ChangeNotifierProvider(create: (_) => DiaryViewModel())
+      // FirestoreService Provider로 등록
+      Provider<FirestoreService>(create: (_) => FirestoreService()),
+      Provider<AuthService>(create: (_) => AuthService()),
+      // DiaryRepository를 Provider로 등록하고, FirestoreService를 주입.
+      ProxyProvider<FirestoreService, DiaryRepository>(
+          update: (_, firestoreService, __) =>
+              DiaryRepository(firestoreService)),
+
+      ProxyProvider2<AuthService, FirestoreService, UserRepository>(
+          update: (_, authService, firestoreService, __) => UserRepository(
+                authservice: authService,
+                firestoreService: firestoreService,
+              )),
+      ChangeNotifierProvider<UsersViewModel>(
+          create: (context) =>
+              UsersViewModel(userRepository: context.read<UserRepository>())),
+
+      // DiaryViewModel을 Provider로 등록하고 DiaryRepository 주입.
+      ChangeNotifierProvider<DiaryViewModel>(
+          create: (context) =>
+              DiaryViewModel(diaryRepository: context.read<DiaryRepository>()))
     ],
     child: const MyApp(),
   ));

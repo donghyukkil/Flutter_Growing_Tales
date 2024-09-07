@@ -5,9 +5,12 @@ import '../../data/models/user.dart';
 import '../../data/repositories/user_repository.dart';
 
 class UsersViewModel extends ChangeNotifier {
-  final UserRepository _userRepository = UserRepository();
+  final UserRepository _userRepository;
   LoginState _state = const LoginState();
   final Map<String, User> _userCache = {};
+
+  UsersViewModel({required UserRepository userRepository})
+      : _userRepository = userRepository;
 
   LoginState get state => _state;
   User? get currentUser => _state.user;
