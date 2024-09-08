@@ -8,15 +8,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
+import '../../core/utils/logger.dart';
 
 class UserRepository {
   final AuthService _authService;
   final FirestoreService _firestoreService;
 
   UserRepository({
-    required AuthService authservice,
+    required AuthService authService,
     required FirestoreService firestoreService,
-  })  : _authService = authservice,
+  })  : _authService = authService,
         _firestoreService = firestoreService;
 
   Future<User?> signInWithGoogle() async {
@@ -39,6 +40,8 @@ class UserRepository {
             {'lastLoginAt': FieldValue.serverTimestamp()},
           );
 
+          Logger.info('User signed in: ${fetchedUser.id}');
+
           return fetchedUser;
         } else {
           final newUser = User(
@@ -60,11 +63,17 @@ class UserRepository {
             },
           );
 
+          Logger.info('New user created: ${newUser.id}');
+
           return newUser;
         }
       }
-    } catch (e) {
-      print('Error in signInWithGoogle: $e');
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Error in signInWithGoogle',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
 
     // 로그인 실패 시 null 반환.
@@ -73,25 +82,44 @@ class UserRepository {
   }
 
   Future<void> signOut() async {
-    await _authService.signOut();
+    try {
+      await _authService.signOut();
+      Logger.info('User signed out successfully');
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Error during sign out',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   Future<List<User>> fetchFollows(List<String> followUserIds) async {
     try {
       if (followUserIds.isEmpty) {
+        Logger.info('No follow user IDs provided, returning empty list.');
+
         return [];
       }
 
       final querySnapshot =
           await _firestoreService.fetchUsersByIds(followUserIds);
 
-      return querySnapshot.docs.map((doc) {
+      final users = querySnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
 
         return User.fromJson(data);
       }).toList();
-    } catch (e) {
-      print('Error fetching follows: $e');
+
+      Logger.info('Fetched ${users.length} users by follow IDs.');
+
+      return users;
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Error fetching follows',
+        error: e,
+        stackTrace: stackTrace,
+      );
 
       return [];
     }
@@ -102,12 +130,22 @@ class UserRepository {
       final doc = await _firestoreService.getUserDoc(userId);
 
       if (doc.exists) {
-        return User.fromJson(doc.data() as Map<String, dynamic>);
+        final user = User.fromJson(doc.data() as Map<String, dynamic>);
+
+        Logger.info('Fetched user by ID: $userId');
+
+        return user;
       } else {
+        Logger.info('User not found for ID: $userId');
+
         return null;
       }
-    } catch (e) {
-      print('Error fetching user By Id:$e');
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Error fetching user by ID: $userId',
+        error: e,
+        stackTrace: stackTrace,
+      );
 
       return null;
     }

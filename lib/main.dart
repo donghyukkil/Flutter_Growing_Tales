@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'core/config/firebase_options.dart';
 import '/core/theme/app_theme.dart';
+import 'core/utils/logger.dart';
 import '/core/widgets/custom_bottom_navigation_bar.dart';
 import 'data/services/firestore_service.dart';
 import 'data/services/auth_service.dart';
@@ -19,13 +20,16 @@ import 'ui/view_models/users_view_model.dart';
 import 'ui/view_models/diary_view_model.dart';
 
 void main() async {
-  // Firebase 초기화를 위해 Flutter 엔진을 미리 준비
   WidgetsFlutterBinding.ensureInitialized();
 
+  Logger.info('Initializing Firebase...');
   // Firebase 초기화
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  Logger.info('Firebase initialized successfully.');
+
   runApp(MultiProvider(
     providers: [
       // FirestoreService Provider로 등록
@@ -38,7 +42,7 @@ void main() async {
 
       ProxyProvider2<AuthService, FirestoreService, UserRepository>(
           update: (_, authService, firestoreService, __) => UserRepository(
-                authservice: authService,
+                authService: authService,
                 firestoreService: firestoreService,
               )),
       ChangeNotifierProvider<UsersViewModel>(
@@ -74,6 +78,8 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _currentIndex = index;
     });
+
+    Logger.info('Tab tapped: $_currentIndex');
   }
 
   @override

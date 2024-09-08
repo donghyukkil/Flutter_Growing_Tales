@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../../data/models/diary.dart';
 import '../../data/models/diary_state.dart';
 import '../../data/repositories/diary_repository.dart';
+import '../../core/utils/logger.dart';
 
 class DiaryViewModel extends ChangeNotifier {
   final DiaryRepository _diaryRepository;
@@ -47,7 +48,7 @@ class DiaryViewModel extends ChangeNotifier {
     try {
       final allDiaries = await _diaryRepository.getAllDiaries();
       //todo 계속된 요청 해결하기. 해당 스크린이 나타날 때 한번만 fetch 되도록.
-      // print('test allDiares $allDiaries');
+      Logger.info('test allDiares $allDiaries');
 
       _state = _state.copyWith(
         allDiaries: allDiaries,

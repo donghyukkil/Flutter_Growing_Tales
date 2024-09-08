@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/models/login_state.dart';
 import '../../data/models/user.dart';
 import '../../data/repositories/user_repository.dart';
+import '../../core/utils/logger.dart';
 
 class UsersViewModel extends ChangeNotifier {
   final UserRepository _userRepository;
@@ -91,8 +92,8 @@ class UsersViewModel extends ChangeNotifier {
 
   Future<User?> getUserById(String userId) async {
     if (_userCache.containsKey(userId)) {
-      //todo.컨텐츠 내용달라지면 업데이트로직.
-      print('testcache-----------------');
+      //todo.컨텐츠 DEEP COPY. nest property. 내용달라지면 업데이트로직.
+      Logger.info('test cache');
       return _userCache[userId];
     }
     try {
@@ -103,8 +104,8 @@ class UsersViewModel extends ChangeNotifier {
       }
 
       return user;
-    } catch (e) {
-      print('Error fetch user by Id: $e');
+    } catch (e, stackTrace) {
+      Logger.error('Error occurred', error: e, stackTrace: stackTrace);
 
       return null;
     }
@@ -119,7 +120,7 @@ class UsersViewModel extends ChangeNotifier {
     bool updateUser =
         false, // 상태 관리용 local flags. 상태 객체에는 포함되지 않고 상태가 업데이트 유무를 결정.
   }) {
-    print(
+    Logger.info(
       '1. Updating state: isLoading=$isLoading, user=$user, errorMessage=$errorMessage, follows=$follows, imageUrl=$imageUrl',
     );
 
@@ -131,7 +132,7 @@ class UsersViewModel extends ChangeNotifier {
       imageUrl: imageUrl ?? _state.imageUrl,
     );
 
-    print('2. Updated state: $_state');
+    Logger.info('2. Updated state: $_state');
     notifyListeners();
   }
 }

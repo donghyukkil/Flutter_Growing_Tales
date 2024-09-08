@@ -10,6 +10,7 @@ import '../../data/models/user.dart';
 import '../../ui/view_models/users_view_model.dart';
 import '../../ui/view_models/diary_view_model.dart';
 import '../../ui/components/user_diary_tile.dart';
+import '../../core/utils/logger.dart';
 
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
@@ -101,7 +102,7 @@ class CommunityScreen extends StatelessWidget {
                                     region: userRegion,
                                     diaryContent: diary.content,
                                     onFollowPressed: () {
-                                      print('Follow button pressed');
+                                      Logger.info('Follow button pressed');
                                     },
                                   );
                                 } else {

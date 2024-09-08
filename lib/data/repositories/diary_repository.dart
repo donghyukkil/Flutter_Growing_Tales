@@ -2,6 +2,7 @@
 
 import '../../data/services/firestore_service.dart';
 import '../models/diary.dart';
+import '../../core/utils/logger.dart';
 
 //todo 추상화하기. -> service/firestore_service로 공통 코드 추출하기
 
@@ -17,11 +18,19 @@ class DiaryRepository {
           .where('userId', isEqualTo: userId)
           .get();
 
-      return querySnapshot.docs
+      final diaries = querySnapshot.docs
           .map((doc) => Diary.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
-    } catch (e) {
-      print('Error getting diaries: $e');
+
+      Logger.info('Fetched ${diaries.length} diaries for user: $userId');
+
+      return diaries;
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Error getting diaries by userId: $userId',
+        error: e,
+        stackTrace: stackTrace,
+      );
 
       return [];
     }
@@ -32,11 +41,19 @@ class DiaryRepository {
       final querySnapshot =
           await _firestoreService.getCollection('diaries').get();
 
-      return querySnapshot.docs
+      final diaries = querySnapshot.docs
           .map((doc) => Diary.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
-    } catch (e) {
-      print('Error getting all diaries: $e');
+
+      Logger.info('Fetched all diaries, count: ${diaries.length}');
+
+      return diaries;
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Error getting all diaries',
+        error: e,
+        stackTrace: stackTrace,
+      );
 
       return [];
     }
@@ -45,8 +62,13 @@ class DiaryRepository {
   Future<void> addDiary(Diary diary) async {
     try {
       await _firestoreService.getCollection('diaries').add(diary.toJson());
-    } catch (e) {
-      print('Error adding diary: $e');
+      Logger.info('Diary added successfully: ${diary.id}');
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Error adding diary',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 }
