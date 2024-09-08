@@ -1,3 +1,5 @@
+// 	•	The utils folder is typically reserved for utility functions or classes that perform non-UI-related tasks, such as formatting dates, validating inputs, logging, or other helper methods that are stateless and not directly tied to rendering UI components.
+
 import 'package:flutter/material.dart';
 
 import '../constants/app_constants.dart';
