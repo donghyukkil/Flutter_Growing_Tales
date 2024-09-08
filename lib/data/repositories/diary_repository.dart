@@ -1,9 +1,9 @@
 // firestore와 통신 담당.
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../data/services/firestore_service.dart';
 import '../models/diary.dart';
+
+//todo 추상화하기. -> service/firestore_service로 공통 코드 추출하기
 
 class DiaryRepository {
   final FirestoreService _firestoreService;

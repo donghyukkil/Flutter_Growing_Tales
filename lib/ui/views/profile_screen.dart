@@ -8,6 +8,7 @@ import '../components/latest_diary_section.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  //todo: 전체 스크롤로 바꾸기, singgleScroll이 안좋은 이유,
   @override
   Widget build(BuildContext context) {
     return Padding(

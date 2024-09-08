@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/widgets/user_info_tile.dart';
+import '../../core/widgets/custom_text.dart';
 
 class UserDiaryTile extends StatelessWidget {
   final String imageUrl;
@@ -23,8 +24,10 @@ class UserDiaryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        bottom: 50.h,
+        bottom: 20.h,
       ),
+
+      // padding: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
@@ -47,8 +50,8 @@ class UserDiaryTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
       ),
       //todo Container에 height 속성 대신 Expaneded?
-      height: 220.h,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           UserInfoTile(
             imageUrl: imageUrl,
@@ -58,64 +61,61 @@ class UserDiaryTile extends StatelessWidget {
             onButtonPressed: onFollowPressed,
             showBorder: false,
           ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 20.w,
-            ),
-            child: Text(
-              diaryContent,
-              style: Theme.of(context).textTheme.bodySmall,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          SizedBox(
-            height: 10.h,
-          ),
           Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 15.w,
-            ),
-            child: Row(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
               children: [
-                Expanded(
-                  flex: 1,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.chat_bubble_outline,
-                      ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Text('324'),
-                    ],
-                  ),
+                CustomText(
+                  text: diaryContent,
                 ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.favorite_border,
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.chat_bubble_outline,
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Text('324'),
+                        ],
                       ),
-                      SizedBox(
-                        width: 4,
+                    ),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    Flexible(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.favorite_border,
+                          ),
+                          SizedBox(
+                            width: 4.w,
+                          ),
+                          Text('3.2k'),
+                        ],
                       ),
-                      Text('3.2k'),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Icon(Icons.ios_share),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: Icon(Icons.ios_share)),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
+          )
         ],
       ),
     );

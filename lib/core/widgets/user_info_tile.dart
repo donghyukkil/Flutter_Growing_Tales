@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../widgets/custom_circle_avatar.dart';
 import '../widgets/custom_follow_button.dart';
+import '../widgets/custom_text.dart';
 import '../constants/app_colors.dart';
 
 class UserInfoTile extends StatelessWidget {
@@ -26,9 +27,7 @@ class UserInfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: 10.0.h,
-      ),
+      padding: EdgeInsets.only(bottom: 10.h),
       child: Container(
         height: 100.h,
         decoration: BoxDecoration(
@@ -56,56 +55,47 @@ class UserInfoTile extends StatelessWidget {
             (10.r),
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(
-            15.0.w,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomCircleAvatar(
-                imageUrl: imageUrl,
-                size: 80.r,
+        child: Row(
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(width: 15.w),
+            CustomCircleAvatar(
+              imageUrl: imageUrl,
+              size: 80.r,
+            ),
+            SizedBox(
+              width: 15.w,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    text: name,
+                    style: TextStyle(fontSize: 20.sp),
+                  ),
+                  CustomText(
+                    text: region,
+                    style: TextStyle(fontSize: 15.sp),
+                  ),
+                ],
               ),
-              SizedBox(
-                width: 2.w,
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      softWrap: false,
-                    ),
-                    Text(
-                      region,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 15.w,
-              ),
-              CustomFollowButton(
-                text: buttonText,
-                onPressed: onButtonPressed,
-                width: 40.w,
-                height: 30.h,
-                backgroundColor: AppColors.followButtonColor,
-                textColor: Colors.black,
-                borderColor: Colors.black,
-                borderRadius: 10.r,
-                borderWidth: 2.w,
-              ),
-            ],
-          ),
+            ),
+            CustomFollowButton(
+              text: buttonText,
+              onPressed: onButtonPressed,
+              width: 40.w,
+              height: 30.h,
+              backgroundColor: AppColors.followButtonColor,
+              textColor: Colors.black,
+              borderColor: Colors.black,
+              borderRadius: 10.r,
+              borderWidth: 2.w,
+            ),
+            SizedBox(width: 15.w),
+          ],
         ),
       ),
     );

@@ -34,4 +34,8 @@ class AppConstants {
   static final googleStyle = GoogleFonts.roboto(
     textStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
   );
+  static final koreanStyleBodySmall = GoogleFonts.jua(
+    textStyle: TextStyle(
+        color: Colors.black, fontWeight: FontWeight.w100, fontSize: 13.sp),
+  );
 }
