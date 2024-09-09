@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../data/dummy_data.dart';
 import '../../core/widgets/user_info_tile.dart';
+import '../../core/widgets/custom_bottom_navigation_bar.dart';
 import '../../core/theme/custom_theme_extension.dart';
 
 class FollowsScreen extends StatelessWidget {
@@ -43,6 +44,7 @@ class FollowsScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
 }

@@ -4,6 +4,7 @@ import '../../core/theme/custom_theme_extension.dart';
 import '../components/profile_section.dart';
 import '../components/tag_section.dart';
 import '../components/latest_diary_section.dart';
+import '../../core/widgets/custom_bottom_navigation_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -23,7 +24,7 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
 }

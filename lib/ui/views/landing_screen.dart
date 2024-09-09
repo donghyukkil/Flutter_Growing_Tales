@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
@@ -111,12 +112,7 @@ class LandingPage extends StatelessWidget {
                                   content: Text('Logged in successfully'),
                                 );
 
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar)
-                                    .closed
-                                    .then((reason) {
-                                  Navigator.of(context).pop();
-                                });
+                                context.go('/statistics');
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(

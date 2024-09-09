@@ -1,16 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/widgets/user_info_tile.dart';
+import '../../core/widgets/custom_bottom_navigation_bar.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/constants/app_colors.dart';
 import '../../data/models/user.dart';
 import '../../ui/view_models/users_view_model.dart';
 import '../../ui/view_models/diary_view_model.dart';
-import '../../ui/views/landing_screen.dart';
 import '../../ui/components/user_diary_tile.dart';
 
 class StatisticsScreen extends StatelessWidget {
@@ -36,12 +37,7 @@ class StatisticsScreen extends StatelessWidget {
                     buttonText: user == null ? 'Login' : 'Logout',
                     onButtonPressed: () {
                       if (user == null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LandingPage(),
-                          ),
-                        );
+                        context.go('/landing');
                       } else {
                         userViewModel.logout();
 
@@ -195,7 +191,7 @@ class StatisticsScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/user_info_tile.dart';
+import '../../core/widgets/custom_bottom_navigation_bar.dart';
 import '../../core/utils/dialog_utils.dart';
 import '../../data/dummy_data.dart';
 import '../../data/models/user.dart';
@@ -127,7 +128,7 @@ class CommunityScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(),
     );
   }
 }

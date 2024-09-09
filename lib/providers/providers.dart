@@ -7,6 +7,7 @@ import '../data/repositories/diary_repository.dart';
 import '../data/repositories/user_repository.dart';
 import '../ui/view_models/users_view_model.dart';
 import '../ui/view_models/diary_view_model.dart';
+import '../ui/view_models/navigation_view_model.dart';
 
 List<SingleChildWidget> appProviders = [
   Provider<FirestoreService>(create: (_) => FirestoreService()),
@@ -26,5 +27,7 @@ List<SingleChildWidget> appProviders = [
     create: (context) => DiaryViewModel(
       diaryRepository: context.read<DiaryRepository>(),
     ),
-  )
+  ),
+  ChangeNotifierProvider<NavigationViewModel>(
+      create: (context) => NavigationViewModel())
 ];
