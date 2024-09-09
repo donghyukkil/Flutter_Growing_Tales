@@ -17,110 +17,117 @@ class CommunityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: Theme.of(context).paddingHorizontal20Vertical10,
-      child: Column(
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                Consumer<UsersViewModel>(
-                  builder: (context, userViewModel, child) {
-                    final currentUser = userViewModel.currentUser;
+    return Scaffold(
+      appBar: AppBar(title: Text('Community')),
+      body: Padding(
+        padding: Theme.of(context).paddingHorizontal20Vertical10,
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Consumer<UsersViewModel>(
+                    builder: (context, userViewModel, child) {
+                      final currentUser = userViewModel.currentUser;
 
-                    return UserInfoTile(
-                      imageUrl: currentUser?.imageUrl ?? dummyUsers[0].imageUrl,
-                      name: currentUser?.name ?? dummyUsers[0].name,
-                      region: currentUser?.region ?? dummyUsers[0].region,
-                      buttonText: currentUser == null ? 'Login' : 'Logout',
-                      onButtonPressed: () {
-                        if (currentUser == null) {
-                          showCustomDialog(context);
-                        } else {
-                          userViewModel.logout();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Logged out successfully.'),
-                            ),
-                          );
-                        }
-                      },
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                Expanded(
-                  child: Consumer<DiaryViewModel>(
-                    builder: (context, diaryViewModel, child) {
-                      final diaries =
-                          context.read<DiaryViewModel>().state.allDiaries;
-
-                      // Fetch all diaries only once using addPostFrameCallback
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        if (diaries.isEmpty) {
-                          diaryViewModel.fetchAllDiaries();
-                        }
-                      });
-
-                      if (diaryViewModel.state.isLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      if (diaries.isEmpty) {
-                        return const Center(
-                          child: Text('No Diaries Found'),
-                        );
-                      }
-
-                      return Scrollbar(
-                        child: ListView.builder(
-                          itemCount: diaries.length,
-                          itemBuilder: (context, index) {
-                            final diary = diaries[index];
-
-                            return FutureBuilder<User?>(
-                              future: context
-                                  .read<UsersViewModel>()
-                                  .getUserById(diary.userId),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Container();
-                                } else if (snapshot.hasError) {
-                                  return Text('Error: ${snapshot.error}');
-                                } else if (snapshot.hasData) {
-                                  final user = snapshot.data;
-                                  final userName = user?.name ?? 'Unknown User';
-                                  final userRegion =
-                                      user?.region ?? 'Unknown Region';
-
-                                  return UserDiaryTile(
-                                    imageUrl: diary.imageUrl,
-                                    name: userName,
-                                    region: userRegion,
-                                    diaryContent: diary.content,
-                                    onFollowPressed: () {
-                                      Logger.info('Follow button pressed');
-                                    },
-                                  );
-                                } else {
-                                  return const Text('User not found');
-                                }
-                              },
+                      return UserInfoTile(
+                        imageUrl:
+                            currentUser?.imageUrl ?? dummyUsers[0].imageUrl,
+                        name: currentUser?.name ?? dummyUsers[0].name,
+                        region: currentUser?.region ?? dummyUsers[0].region,
+                        buttonText: currentUser == null ? 'Login' : 'Logout',
+                        onButtonPressed: () {
+                          if (currentUser == null) {
+                            showCustomDialog(context);
+                          } else {
+                            userViewModel.logout();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Logged out successfully.'),
+                              ),
                             );
-                          },
-                        ),
+                          }
+                        },
                       );
                     },
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 30.h,
+                  ),
+                  Expanded(
+                    child: Consumer<DiaryViewModel>(
+                      builder: (context, diaryViewModel, child) {
+                        final diaries =
+                            context.read<DiaryViewModel>().state.allDiaries;
+
+                        // Fetch all diaries only once using addPostFrameCallback
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (diaries.isEmpty) {
+                            diaryViewModel.fetchAllDiaries();
+                          }
+                        });
+
+                        if (diaryViewModel.state.isLoading) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        if (diaries.isEmpty) {
+                          return const Center(
+                            child: Text('No Diaries Found'),
+                          );
+                        }
+
+                        return Scrollbar(
+                          child: ListView.builder(
+                            itemCount: diaries.length,
+                            itemBuilder: (context, index) {
+                              final diary = diaries[index];
+
+                              return FutureBuilder<User?>(
+                                future: context
+                                    .read<UsersViewModel>()
+                                    .getUserById(diary.userId),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Container();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else if (snapshot.hasData) {
+                                    final user = snapshot.data;
+                                    final userName =
+                                        user?.name ?? 'Unknown User';
+                                    final userRegion =
+                                        user?.region ?? 'Unknown Region';
+
+                                    return UserDiaryTile(
+                                      imageUrl: diary.imageUrl,
+                                      name: userName,
+                                      region: userRegion,
+                                      diaryContent: diary.content,
+                                      onFollowPressed: () {
+                                        Logger.info('Follow button pressed');
+                                      },
+                                    );
+                                  } else {
+                                    return const Text('User not found');
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+      bottomNavigationBar: BottomAppBar(),
     );
   }
 }

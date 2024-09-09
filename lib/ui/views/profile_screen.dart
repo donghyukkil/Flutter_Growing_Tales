@@ -11,15 +11,19 @@ class ProfileScreen extends StatelessWidget {
   //todo: 전체 스크롤로 바꾸기, singgleScroll이 안좋은 이유,
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: Theme.of(context).paddingHorizontal20Vertical10,
-      child: Column(
-        children: [
-          ProfileSection(),
-          LatestDiarySection(),
-          TagSection(),
-        ],
+    return Scaffold(
+      appBar: AppBar(title: Text('Profile')),
+      body: Padding(
+        padding: Theme.of(context).paddingHorizontal20Vertical10,
+        child: Column(
+          children: [
+            ProfileSection(),
+            LatestDiarySection(),
+            TagSection(),
+          ],
+        ),
       ),
+      bottomNavigationBar: BottomAppBar(),
     );
   }
 }

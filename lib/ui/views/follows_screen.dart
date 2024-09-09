@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../data/dummy_data.dart';
 import '../../core/widgets/user_info_tile.dart';
@@ -10,34 +9,39 @@ class FollowsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: Theme.of(context).paddingHorizontal20Vertical10,
-      child: Column(
-        children: [
-          Expanded(
-            child: Scrollbar(
-              thumbVisibility: true,
-              child: ListView.builder(
-                itemCount: dummyUsers.length,
-                itemBuilder: (context, index) {
-                  final item = dummyUsers[index];
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Follows'),
+      ),
+      body: Padding(
+        padding: Theme.of(context).paddingHorizontal20Vertical10,
+        child: Column(
+          children: [
+            Expanded(
+              child: Scrollbar(
+                thumbVisibility: true,
+                child: ListView.builder(
+                  itemCount: dummyUsers.length,
+                  itemBuilder: (context, index) {
+                    final item = dummyUsers[index];
 
-                  return UserInfoTile(
-                    imageUrl: item.imageUrl,
-                    name: item.name,
-                    region: item.region,
-                    onButtonPressed: () {
-                      print(
-                        'Follow',
-                      );
-                    },
-                    buttonText: 'Follow',
-                  );
-                },
+                    return UserInfoTile(
+                      imageUrl: item.imageUrl,
+                      name: item.name,
+                      region: item.region,
+                      onButtonPressed: () {
+                        print(
+                          'Follow',
+                        );
+                      },
+                      buttonText: 'Follow',
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
