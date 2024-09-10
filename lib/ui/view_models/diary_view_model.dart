@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../../data/models/diary.dart';
-import '../../data/models/user.dart';
-import '../../data/models/diary_state.dart';
+import '../../data/models/diary/diary.dart';
+import '../../data/models/user/user.dart';
+import '../../data/models/diary/diary_state.dart';
 import '../../ui/view_models/users_view_model.dart';
 import '../../data/repositories/diary_repository.dart';
 import '../../core/utils/logger.dart';

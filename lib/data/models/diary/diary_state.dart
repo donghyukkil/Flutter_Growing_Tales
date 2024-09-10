@@ -5,7 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'diary.dart';
-import '../../data/models/user.dart';
+import '../user/user.dart';
 
 part 'diary_state.freezed.dart';
 

@@ -5,7 +5,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/user.dart';
+import '../models/user/user.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
 import '../../core/utils/logger.dart';

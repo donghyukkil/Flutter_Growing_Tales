@@ -41,6 +41,8 @@ abstract class $DiaryStateCopyWith<$Res> {
       List<Diary> followedUserDiaries,
       String? errorMessage,
       User? currentUser});
+
+  $UserCopyWith<$Res>? get currentUser;
 }
 
 /// @nodoc
@@ -90,6 +92,18 @@ class _$DiaryStateCopyWithImpl<$Res, $Val extends DiaryState>
               as User?,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserCopyWith<$Res>? get currentUser {
+    if (_value.currentUser == null) {
+      return null;
+    }
+
+    return $UserCopyWith<$Res>(_value.currentUser!, (value) {
+      return _then(_value.copyWith(currentUser: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -107,6 +121,9 @@ abstract class _$$DiaryStateImplCopyWith<$Res>
       List<Diary> followedUserDiaries,
       String? errorMessage,
       User? currentUser});
+
+  @override
+  $UserCopyWith<$Res>? get currentUser;
 }
 
 /// @nodoc
@@ -226,8 +243,8 @@ class _$DiaryStateImpl implements _DiaryState {
                 .equals(other._followedUserDiaries, _followedUserDiaries) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
-            const DeepCollectionEquality()
-                .equals(other.currentUser, currentUser));
+            (identical(other.currentUser, currentUser) ||
+                other.currentUser == currentUser));
   }
 
   @override
@@ -238,7 +255,7 @@ class _$DiaryStateImpl implements _DiaryState {
       const DeepCollectionEquality().hash(_allDiaries),
       const DeepCollectionEquality().hash(_followedUserDiaries),
       errorMessage,
-      const DeepCollectionEquality().hash(currentUser));
+      currentUser);
 
   @JsonKey(ignore: true)
   @override

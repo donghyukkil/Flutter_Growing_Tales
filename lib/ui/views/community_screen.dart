@@ -7,7 +7,7 @@ import '../../core/widgets/user_info_tile.dart';
 import '../../core/widgets/custom_bottom_navigation_bar.dart';
 import '../../core/utils/dialog_utils.dart';
 import '../../data/dummy_data.dart';
-import '../../data/models/user.dart';
+import '../../data/models/user/user.dart';
 import '../../ui/view_models/users_view_model.dart';
 import '../../ui/view_models/diary_view_model.dart';
 import '../../ui/components/user_diary_tile.dart';

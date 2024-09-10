@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/user.dart';
+import 'models/user/user.dart';
 
 const List<Map<String, String>> dummyDiary = [
   {'image': 'assets/dummy1.png', 'title': 'Contents 1'},

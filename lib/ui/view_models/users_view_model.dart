@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/models/login_state.dart';
-import '../../data/models/user.dart';
+import '../../data/models/login/login_state.dart';
+import '../../data/models/user/user.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../core/utils/logger.dart';
 import '../../ui/view_models/diary_view_model.dart';

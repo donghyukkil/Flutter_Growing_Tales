@@ -1,7 +1,7 @@
 // for communicate firestore.
 
 import '../../data/services/firestore_service.dart';
-import '../models/diary.dart';
+import '../models/diary/diary.dart';
 import '../../core/utils/logger.dart';
 
 class DiaryRepository {
