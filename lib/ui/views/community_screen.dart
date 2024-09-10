@@ -41,7 +41,7 @@ class CommunityScreen extends StatelessWidget {
                           if (currentUser == null) {
                             showCustomDialog(context);
                           } else {
-                            userViewModel.logout();
+                            userViewModel.logout(context);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Logged out successfully.'),

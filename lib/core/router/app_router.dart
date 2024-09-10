@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../ui/views/community_screen.dart';
 import '../../ui/views/follows_screen.dart';
 import '../../ui/views/landing_screen.dart';

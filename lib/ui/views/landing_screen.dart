@@ -25,7 +25,7 @@ class LandingPage extends StatelessWidget {
           child: CircularBackButton(
             iconSize: 20.0.w,
             onPressed: () {
-              Navigator.of(context).pop();
+              context.pop();
             },
           ),
         ),
@@ -108,11 +108,14 @@ class LandingPage extends StatelessWidget {
                               await userViewModel.loginWithGoogle();
 
                               if (userViewModel.currentUser != null) {
-                                final snackBar = SnackBar(
+                                SnackBar(
                                   content: Text('Logged in successfully'),
                                 );
 
-                                context.go('/statistics');
+                                // context.go('/statistics');
+                                context.pop();
+
+                                //todo: statistics로 돌아왔을 때,
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
