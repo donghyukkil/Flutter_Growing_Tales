@@ -5,6 +5,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'diary.dart';
+import '../../data/models/user.dart';
 
 part 'diary_state.freezed.dart';
 
@@ -16,5 +17,6 @@ class DiaryState with _$DiaryState {
     @Default([]) List<Diary> allDiaries,
     @Default([]) List<Diary> followedUserDiaries,
     String? errorMessage,
+    User? currentUser,
   }) = _DiaryState;
 }

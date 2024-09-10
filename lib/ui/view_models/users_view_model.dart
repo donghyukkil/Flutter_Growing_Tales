@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../data/models/login_state.dart';
 import '../../data/models/user.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../core/utils/logger.dart';
+import '../../ui/view_models/diary_view_model.dart';
 
 class UsersViewModel extends ChangeNotifier {
   final UserRepository _userRepository;
@@ -46,8 +48,10 @@ class UsersViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     await _userRepository.signOut();
+
+    context.read<DiaryViewModel>().resetState();
 
     _updateState(
       user: null,
@@ -93,7 +97,8 @@ class UsersViewModel extends ChangeNotifier {
   Future<User?> getUserById(String userId) async {
     if (_userCache.containsKey(userId)) {
       //todo.컨텐츠 DEEP COPY. nest property. 내용달라지면 업데이트로직.
-      Logger.info('test cache');
+      Logger.info('user cache');
+
       return _userCache[userId];
     }
     try {
@@ -110,6 +115,28 @@ class UsersViewModel extends ChangeNotifier {
       return null;
     }
   }
+
+  Future<void> fetchUserById(String userId) async {
+    if (_userCache.containsKey(userId)) {
+      return;
+    }
+
+    try {
+      final user = await _userRepository.fetchUserById(userId);
+
+      if (user != null) {
+        // Logger.info('$user');
+
+        _userCache[userId] = user;
+
+        notifyListeners();
+      }
+    } catch (e, stackTrace) {
+      Logger.error('Error fetching user $e');
+    }
+  }
+
+  User? getCachedUserById(String userId) => _userCache[userId];
 
   void _updateState({
     bool? isLoading,

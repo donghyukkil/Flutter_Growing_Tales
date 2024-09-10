@@ -44,7 +44,7 @@ class DiaryRepository {
           .map((doc) => Diary.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
 
-      Logger.info('Fetched all diaries, count: ${diaries.length}');
+      // Logger.info('Fetched all diaries, count: ${diaries.length}');
 
       return diaries;
     } catch (e, stackTrace) {
@@ -61,7 +61,7 @@ class DiaryRepository {
   Future<void> addDiary(Diary diary) async {
     try {
       await _firestoreService.getCollection('diaries').add(diary.toJson());
-      Logger.info('Diary added successfully: ${diary.id}');
+      // Logger.info('Diary added successfully: ${diary.id}');
     } catch (e, stackTrace) {
       Logger.error(
         'Error adding diary',

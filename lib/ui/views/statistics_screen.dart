@@ -1,3 +1,4 @@
+//todo statisgic section화
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +10,6 @@ import '../../core/widgets/user_info_tile.dart';
 import '../../core/widgets/custom_bottom_navigation_bar.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/constants/app_colors.dart';
-import '../../data/models/user.dart';
 import '../../ui/view_models/users_view_model.dart';
 import '../../ui/view_models/diary_view_model.dart';
 import '../../ui/components/user_diary_tile.dart';
@@ -37,9 +37,10 @@ class StatisticsScreen extends StatelessWidget {
                     buttonText: user == null ? 'Login' : 'Logout',
                     onButtonPressed: () {
                       if (user == null) {
-                        context.go('/landing');
+                        // context.go('/landing');
+                        context.push('/landing');
                       } else {
-                        userViewModel.logout();
+                        userViewModel.logout(context);
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -112,65 +113,36 @@ class StatisticsScreen extends StatelessWidget {
                 builder: (context, diaryViewModel, child) {
                   final userId =
                       context.read<UsersViewModel>().currentUser?.id ?? '';
+                  final currentUser = diaryViewModel.state.currentUser;
+                  final diaries = diaryViewModel.state.userDiaries;
 
+                  // to delay state changes until after the current frame is build;
                   if (userId.isNotEmpty &&
                       diaryViewModel.state.userDiaries.isEmpty) {
-                    // issue: notifiyListener() method was called during the build phase of the widget tree.
-                    // In Flutter updates to the UI should be done outside the bulild pross to avoid confilcts with ongoing rendering cycle
-                    // -> solution: Delay the state change until after build.
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      diaryViewModel.fetchDiariesByUserId(
-                          userId); // to delay state changes unitl after the current frame is build;
+                      diaryViewModel.fetchDiariesByUserId(userId);
                     });
                   }
 
-                  final diaries = diaryViewModel.state.userDiaries;
-
-                  //todo 계속 네트워크 요청됨.
-                  // print(diaries);
-
                   if (diaries.isEmpty) {
-                    return Center(
-                      child: Text('No Diareis Found'),
-                    );
+                    return Center(child: Text('No Diareis Found'));
                   }
 
                   return CarouselSlider.builder(
                     itemCount: diaries.length,
                     itemBuilder: (context, index, realIndex) {
                       final diary = diaries[index];
+                      final userName = currentUser?.name ?? 'Unknown User';
+                      final userRegion =
+                          currentUser?.region ?? 'Unknown Region';
 
-                      //todo: Diary 유저 name을 추가 vs fetch Data + FutureBuilder.
-                      // Option 1: Add User name and region Directly to the Diary Model
-                      // Option 2: Fetch User Data on the Fly Using FutureBuilder
-
-                      return FutureBuilder<User?>(
-                          future: context
-                              .read<UsersViewModel>()
-                              .getUserById(diary.userId),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.hasError}');
-                            } else if (snapshot.hasData) {
-                              final user = snapshot.data;
-                              final userName = user?.name ?? 'Unknown User';
-                              final userRegion =
-                                  user?.region ?? 'Unknown Region';
-
-                              return UserDiaryTile(
-                                imageUrl: diary.imageUrl,
-                                name: userName,
-                                region: userRegion,
-                                diaryContent: diary.content,
-                                onFollowPressed: () {},
-                              );
-                            } else {
-                              return const Text('User not found');
-                            }
-                          });
+                      return UserDiaryTile(
+                        imageUrl: diary.imageUrl,
+                        name: userName,
+                        region: userRegion,
+                        diaryContent: diary.content,
+                        onFollowPressed: () {},
+                      );
                     },
                     options: CarouselOptions(
                       height: 250.h,

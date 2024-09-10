@@ -21,6 +21,7 @@ mixin _$DiaryState {
   List<Diary> get allDiaries => throw _privateConstructorUsedError;
   List<Diary> get followedUserDiaries => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  User? get currentUser => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DiaryStateCopyWith<DiaryState> get copyWith =>
@@ -38,7 +39,8 @@ abstract class $DiaryStateCopyWith<$Res> {
       List<Diary> userDiaries,
       List<Diary> allDiaries,
       List<Diary> followedUserDiaries,
-      String? errorMessage});
+      String? errorMessage,
+      User? currentUser});
 }
 
 /// @nodoc
@@ -59,6 +61,7 @@ class _$DiaryStateCopyWithImpl<$Res, $Val extends DiaryState>
     Object? allDiaries = null,
     Object? followedUserDiaries = null,
     Object? errorMessage = freezed,
+    Object? currentUser = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -81,6 +84,10 @@ class _$DiaryStateCopyWithImpl<$Res, $Val extends DiaryState>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      currentUser: freezed == currentUser
+          ? _value.currentUser
+          : currentUser // ignore: cast_nullable_to_non_nullable
+              as User?,
     ) as $Val);
   }
 }
@@ -98,7 +105,8 @@ abstract class _$$DiaryStateImplCopyWith<$Res>
       List<Diary> userDiaries,
       List<Diary> allDiaries,
       List<Diary> followedUserDiaries,
-      String? errorMessage});
+      String? errorMessage,
+      User? currentUser});
 }
 
 /// @nodoc
@@ -117,6 +125,7 @@ class __$$DiaryStateImplCopyWithImpl<$Res>
     Object? allDiaries = null,
     Object? followedUserDiaries = null,
     Object? errorMessage = freezed,
+    Object? currentUser = freezed,
   }) {
     return _then(_$DiaryStateImpl(
       isLoading: null == isLoading
@@ -139,6 +148,10 @@ class __$$DiaryStateImplCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      currentUser: freezed == currentUser
+          ? _value.currentUser
+          : currentUser // ignore: cast_nullable_to_non_nullable
+              as User?,
     ));
   }
 }
@@ -151,7 +164,8 @@ class _$DiaryStateImpl implements _DiaryState {
       final List<Diary> userDiaries = const [],
       final List<Diary> allDiaries = const [],
       final List<Diary> followedUserDiaries = const [],
-      this.errorMessage})
+      this.errorMessage,
+      this.currentUser})
       : _userDiaries = userDiaries,
         _allDiaries = allDiaries,
         _followedUserDiaries = followedUserDiaries;
@@ -189,10 +203,12 @@ class _$DiaryStateImpl implements _DiaryState {
 
   @override
   final String? errorMessage;
+  @override
+  final User? currentUser;
 
   @override
   String toString() {
-    return 'DiaryState(isLoading: $isLoading, userDiaries: $userDiaries, allDiaries: $allDiaries, followedUserDiaries: $followedUserDiaries, errorMessage: $errorMessage)';
+    return 'DiaryState(isLoading: $isLoading, userDiaries: $userDiaries, allDiaries: $allDiaries, followedUserDiaries: $followedUserDiaries, errorMessage: $errorMessage, currentUser: $currentUser)';
   }
 
   @override
@@ -209,7 +225,9 @@ class _$DiaryStateImpl implements _DiaryState {
             const DeepCollectionEquality()
                 .equals(other._followedUserDiaries, _followedUserDiaries) &&
             (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.errorMessage == errorMessage) &&
+            const DeepCollectionEquality()
+                .equals(other.currentUser, currentUser));
   }
 
   @override
@@ -219,7 +237,8 @@ class _$DiaryStateImpl implements _DiaryState {
       const DeepCollectionEquality().hash(_userDiaries),
       const DeepCollectionEquality().hash(_allDiaries),
       const DeepCollectionEquality().hash(_followedUserDiaries),
-      errorMessage);
+      errorMessage,
+      const DeepCollectionEquality().hash(currentUser));
 
   @JsonKey(ignore: true)
   @override
@@ -234,7 +253,8 @@ abstract class _DiaryState implements DiaryState {
       final List<Diary> userDiaries,
       final List<Diary> allDiaries,
       final List<Diary> followedUserDiaries,
-      final String? errorMessage}) = _$DiaryStateImpl;
+      final String? errorMessage,
+      final User? currentUser}) = _$DiaryStateImpl;
 
   @override
   bool get isLoading;
@@ -246,6 +266,8 @@ abstract class _DiaryState implements DiaryState {
   List<Diary> get followedUserDiaries;
   @override
   String? get errorMessage;
+  @override
+  User? get currentUser;
   @override
   @JsonKey(ignore: true)
   _$$DiaryStateImplCopyWith<_$DiaryStateImpl> get copyWith =>
