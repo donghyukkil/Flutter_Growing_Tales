@@ -1,5 +1,7 @@
 // for communicate firestore.
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../data/services/firestore_service.dart';
 import '../models/diary/diary.dart';
 import '../../core/utils/logger.dart';
@@ -9,24 +11,18 @@ class DiaryRepository {
 
   DiaryRepository(this._firestoreService);
 
-  Future<List<Diary>> getDiariesByUserId(String userId) async {
+  Future<List<Diary>> _fetchDiaries(
+      Future<QuerySnapshot> Function(CollectionReference) queryFunction) async {
     try {
-      //todo extract to Repository.
-      final querySnapshot = await _firestoreService
-          .getCollection('diaries')
-          .where('userId', isEqualTo: userId)
-          .get();
+      final querySnapshot =
+          await queryFunction(_firestoreService.getCollection('diaries'));
 
-      final diaries = querySnapshot.docs
+      return querySnapshot.docs
           .map((doc) => Diary.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
-
-      // Logger.info('Fetched ${diaries.length} diaries for user: $userId');
-
-      return diaries;
     } catch (e, stackTrace) {
       Logger.error(
-        'Error getting diaries by userId: $userId',
+        'Error getting diaries by userId',
         error: e,
         stackTrace: stackTrace,
       );
@@ -35,27 +31,13 @@ class DiaryRepository {
     }
   }
 
+  Future<List<Diary>> getDiariesByUserId(String userId) async {
+    return _fetchDiaries(
+        (collection) => collection.where('userId', isEqualTo: userId).get());
+  }
+
   Future<List<Diary>> getAllDiaries() async {
-    try {
-      final querySnapshot =
-          await _firestoreService.getCollection('diaries').get();
-
-      final diaries = querySnapshot.docs
-          .map((doc) => Diary.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
-
-      // Logger.info('Fetched all diaries, count: ${diaries.length}');
-
-      return diaries;
-    } catch (e, stackTrace) {
-      Logger.error(
-        'Error getting all diaries',
-        error: e,
-        stackTrace: stackTrace,
-      );
-
-      return [];
-    }
+    return _fetchDiaries((collection) => collection.get());
   }
 
   Future<void> addDiary(Diary diary) async {

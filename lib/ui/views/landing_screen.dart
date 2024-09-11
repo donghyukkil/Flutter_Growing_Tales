@@ -108,14 +108,17 @@ class LandingPage extends StatelessWidget {
                               await userViewModel.loginWithGoogle();
 
                               if (userViewModel.currentUser != null) {
-                                SnackBar(
-                                  content: Text('Logged in successfully'),
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Logged in successfully'),
+                                    duration: Duration(seconds: 2),
+                                  ),
                                 );
 
-                                // context.go('/statistics');
-                                context.pop();
+                                await Future.delayed(Duration(seconds: 2));
+                                // // context.go('/statistics');
 
-                                //todo: statistics로 돌아왔을 때,
+                                context.pop();
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
