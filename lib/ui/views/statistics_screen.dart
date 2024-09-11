@@ -1,10 +1,10 @@
 //todo statisgic section화
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import '../../core/widgets/user_info_tile.dart';
 import '../../core/widgets/custom_bottom_navigation_bar.dart';
@@ -136,12 +136,17 @@ class StatisticsScreen extends StatelessWidget {
                       final userRegion =
                           currentUser?.region ?? 'Unknown Region';
 
-                      return UserDiaryTile(
-                        imageUrl: diary.imageUrl,
-                        name: userName,
-                        region: userRegion,
-                        diaryContent: diary.content,
-                        onFollowPressed: () {},
+                      return GestureDetector(
+                        onTap: () {
+                          context.push('/diary_detail', extra: diary);
+                        },
+                        child: UserDiaryTile(
+                          imageUrl: diary.imageUrl,
+                          name: userName,
+                          region: userRegion,
+                          diaryContent: diary.content,
+                          onFollowPressed: () {},
+                        ),
                       );
                     },
                     options: CarouselOptions(
@@ -152,7 +157,7 @@ class StatisticsScreen extends StatelessWidget {
                       enableInfiniteScroll: true,
                       autoPlayInterval: Duration(seconds: 3),
                       onPageChanged: (index, reason) {
-                        print('Page changed to index: $index');
+                        // print('Page changed to index: $index');
                       },
                       viewportFraction: 1,
                     ),
