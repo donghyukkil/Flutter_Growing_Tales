@@ -69,5 +69,17 @@
 	<!-- 키보드나 터치바 등을 통한 간접 입력 이벤트를 지원 -->
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+		<!-- Photo Library Usage Description -->
+    	<key>NSPhotoLibraryUsageDescription</key>
+    	<string>We need your permission to access the photo library to upload your memories.</string>
+
+    	<!-- Camera Usage Description -->
+    	<key>NSCameraUsageDescription</key>
+    	<string>We need your permission to use the camera to take pictures for your diary.</string>
+
+    	<!-- Photo Library Add Usage Description -->
+    	<key>NSPhotoLibraryAddUsageDescription</key>
+    	<string>We need your permission to add photos to your library.</string>
 </dict>
 </plist>
