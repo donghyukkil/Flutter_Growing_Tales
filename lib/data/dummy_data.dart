@@ -32,3 +32,36 @@ List<User> dummyUsers = [
     region: 'New York, USA',
   ),
 ];
+
+final List<Map<String, String>> dummyBooks = [
+  {
+    'image': 'assets/dummy1.png',
+    'username': 'UserName1',
+    'title': 'Book Title 1',
+  },
+  {
+    'image': 'assets/dummy2.png',
+    'username': 'UserName2',
+    'title': 'Book Title 2',
+  },
+  {
+    'image': 'assets/dummy3.png',
+    'username': 'UserName3',
+    'title': 'Book Title 3',
+  },
+  {
+    'image': 'assets/dummy4.png',
+    'username': 'UserName4',
+    'title': 'Book Title 4',
+  },
+  {
+    'image': 'assets/dummy5.png',
+    'username': 'UserName5',
+    'title': 'Book Title 5',
+  },
+  {
+    'image': 'assets/dummy1.png',
+    'username': 'UserName6',
+    'title': 'Book Title 6',
+  },
+];

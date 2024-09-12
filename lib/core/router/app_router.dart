@@ -6,6 +6,8 @@ import '../../ui/views/landing_screen.dart';
 import '../../ui/views/profile_screen.dart';
 import '../../ui/views/statistics_screen.dart';
 import '../../ui/views/diary_detail_screen.dart';
+import '../../ui/views/diary_write_screen.dart';
+
 import '../../data/models/diary/diary.dart';
 
 class AppRouter {
@@ -31,6 +33,10 @@ class AppRouter {
       GoRoute(
         path: '/landing',
         builder: (context, state) => const LandingPage(),
+      ),
+      GoRoute(
+        path: '/diary/write',
+        builder: (context, state) => const DiaryWriteScreen(),
       ),
       GoRoute(
         path: '/diary_detail',

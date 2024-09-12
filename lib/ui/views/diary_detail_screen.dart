@@ -8,6 +8,8 @@ import '../../core/widgets/user_info_tile.dart';
 import '../../data/dummy_data.dart';
 import '../../data/models/diary/diary.dart';
 
+//todo 책 통계 테이블 추가.
+
 class DiaryDetailScreen extends StatelessWidget {
   final Diary diary;
 
