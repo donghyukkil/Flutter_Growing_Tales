@@ -25,7 +25,6 @@ class BookListSection extends StatelessWidget {
 
             return Column(
               children: [
-                SizedBox(height: 20.h),
                 Row(
                   children: [
                     SizedBox(

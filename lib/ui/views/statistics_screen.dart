@@ -170,6 +170,8 @@ class StatisticsScreen extends StatelessWidget {
       ),
       bottomNavigationBar: CustomBottomNavigationBar(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.followButtonColor,
+        child: Icon(Icons.add),
         onPressed: () {
           // context.go('/diary/write');
           context.push('/diary/write');

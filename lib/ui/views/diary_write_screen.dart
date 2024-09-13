@@ -10,6 +10,8 @@ import '../../core/widgets/circular_back_button.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/custom_border_container.dart';
 import '../../core/widgets/custom_styled_text_field.dart';
+import '../../core/widgets/custom_button.dart';
+import '../../core/widgets/custom_checkbox.dart';
 
 import '../../core/utils/image_utils.dart';
 import '../../ui/components/book_list_section.dart';
@@ -68,7 +70,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
       appBar: AppBar(
         title: Text('Diary_Write'),
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: CircularBackButton(
               iconSize: 20,
               onPressed: () {
@@ -239,21 +241,28 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                           width: 20.w,
                           height: 20.h,
                           decoration: BoxDecoration(
-                              color: AppColors.followButtonColor,
+                              color: AppColors.growingTalesPink,
                               borderRadius: BorderRadius.circular(20)),
                         ),
                         SizedBox(width: 10.w),
                         Text('Books'),
+                        _showOnlyTop == true
+                            ? IconButton(
+                                iconSize: 30.0,
+                                icon: Icon(Icons.keyboard_arrow_right_outlined),
+                                onPressed: _toggleTopView,
+                              )
+                            : IconButton(
+                                iconSize: 30.0,
+                                icon: Icon(Icons.keyboard_arrow_down_outlined),
+                                onPressed: _toggleTopView,
+                              )
                       ],
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.filter_alt),
-                      onPressed: _toggleTopView,
                     ),
                     Icon(Icons.search),
                   ],
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
                 BookListSection(showOnlyTop: _showOnlyTop),
               ],
             ),
@@ -269,7 +278,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                           width: 20.w,
                           height: 20.h,
                           decoration: BoxDecoration(
-                              color: AppColors.followButtonColor,
+                              color: AppColors.growingTalesGreen,
                               borderRadius: BorderRadius.circular(20)),
                         ),
                         SizedBox(width: 10.w),
@@ -285,57 +294,71 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       SizedBox(height: 10.w),
                       Row(
                         children: [
-                          Container(
-                            width: 20.w,
-                            height: 20.h,
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(20)),
+                          CustomCheckbox(
+                            isChecked: false,
+                            onChanged: (bool newValue) {
+                              print('체크박스 상태가 변경됨: $newValue');
+                            },
+                            checkColor: AppColors.followButtonColor,
+                            uncheckedColor: Colors.white,
+                            borderColor: Colors.black,
                           ),
                           SizedBox(width: 10.w),
                           Text('Choose public option'),
                         ],
                       ),
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 20.h),
                       Row(
                         children: [
-                          Container(
-                            width: 20.w,
-                            height: 20.h,
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(20)),
+                          CustomCheckbox(
+                            isChecked: false,
+                            onChanged: (bool newValue) {
+                              print('체크박스 상태가 변경됨: $newValue');
+                            },
+                            checkColor: AppColors.followButtonColor,
+                            uncheckedColor: Colors.white,
+                            borderColor: Colors.black,
                           ),
                           SizedBox(width: 10.w),
-                          Text('show your Name'),
+                          Text('Show your Name'),
                         ],
                       ),
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 20.h),
                       Row(
                         children: [
-                          Container(
-                            width: 20.w,
-                            height: 20.h,
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(20)),
+                          CustomCheckbox(
+                            isChecked: false,
+                            onChanged: (bool newValue) {
+                              print('체크박스 상태가 변경됨: $newValue');
+                            },
+                            checkColor: AppColors.followButtonColor,
+                            uncheckedColor: Colors.white,
+                            borderColor: Colors.black,
                           ),
                           SizedBox(width: 10.w),
                           Text('Show your Region'),
                         ],
                       ),
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 50.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: ElevatedButton(
-                                onPressed: () {}, child: Text('Delete')),
+                            child: CustomButton(
+                              onPressed: () {},
+                              title: 'Delete',
+                              backGroundColor: Colors.white,
+                              textColor: Colors.black,
+                            ),
                           ),
                           SizedBox(width: 30.w),
                           Expanded(
-                            child: ElevatedButton(
-                                onPressed: () {}, child: Text('Save')),
+                            child: CustomButton(
+                              onPressed: () {},
+                              title: 'Save',
+                              backGroundColor: Colors.black,
+                              textColor: Colors.white,
+                            ),
                           )
                         ],
                       )
