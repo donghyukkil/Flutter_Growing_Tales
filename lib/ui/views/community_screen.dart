@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/user_info_tile.dart';
 import '../../core/widgets/custom_bottom_navigation_bar.dart';
-import '../../core/utils/dialog_utils.dart';
-import '../../data/dummy_data.dart';
 import '../../data/models/user/user.dart';
 import '../../ui/view_models/users_view_model.dart';
 import '../../ui/view_models/diary_view_model.dart';
@@ -29,22 +28,24 @@ class CommunityScreen extends StatelessWidget {
                 children: [
                   Consumer<UsersViewModel>(
                     builder: (context, userViewModel, child) {
-                      final currentUser = userViewModel.currentUser;
+                      // final currentUser = userViewModel.currentUser;
 
+                      final user = userViewModel.state.user;
                       return UserInfoTile(
-                        imageUrl:
-                            currentUser?.imageUrl ?? dummyUsers[0].imageUrl,
-                        name: currentUser?.name ?? dummyUsers[0].name,
-                        region: currentUser?.region ?? dummyUsers[0].region,
-                        buttonText: currentUser == null ? 'Login' : 'Logout',
+                        imageUrl: user?.imageUrl ?? 'assets/dummy1.png',
+                        name: user?.name ?? 'Login plz',
+                        region: user?.region ?? 'Find your loves',
+                        buttonText: user == null ? 'Login' : 'Logout',
                         onButtonPressed: () {
-                          if (currentUser == null) {
-                            showCustomDialog(context);
+                          if (user == null) {
+                            // context.go('/landing');
+                            context.push('/landing');
                           } else {
                             userViewModel.logout(context);
+
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Logged out successfully.'),
+                              SnackBar(
+                                content: Text('Logged out successfully,'),
                               ),
                             );
                           }
