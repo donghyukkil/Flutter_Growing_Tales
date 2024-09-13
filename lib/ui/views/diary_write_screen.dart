@@ -4,12 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/widgets/circular_back_button.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/custom_border_container.dart';
 import '../../core/widgets/custom_styled_text_field.dart';
+import '../../core/utils/dialog_utils.dart';
+import '../../core/utils/logger.dart';
 import '../../ui/components/book_list_section.dart';
 
 class DiaryWriteScreen extends StatefulWidget {
@@ -19,16 +22,18 @@ class DiaryWriteScreen extends StatefulWidget {
   State<DiaryWriteScreen> createState() => _DiaryWriteScreenState();
 }
 
+//todo flutter_image_compress
+
 class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   String _text = '';
+  int _currentPicture = 0;
+  bool _showOnlyTop = true;
+
   final List<XFile> _imageFiles = [];
   final ImagePicker _picker = ImagePicker();
-  int _currentPicture = 0;
   final TextEditingController _controller = TextEditingController();
   final CarouselSliderController _carouselSliderController =
       CarouselSliderController();
-
-  bool _showOnlyTop = true;
 
   @override
   void initState() {
@@ -46,13 +51,49 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
     });
   }
 
-  Future<void> _pickImage() async {
-    final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+  // 이미지 커스텀 보더 설정.
 
-    if (pickedFiles != null) {
-      setState(() {
-        _imageFiles.addAll(pickedFiles);
-      });
+  Future<void> _pickImage() async {
+    try {
+      PermissionStatus status = await Permission.photos.status;
+      Logger.info('Current Photo Permission Status: $status');
+
+      status = await Permission.photos.request();
+
+      if (status.isGranted) {
+        final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+
+        if (pickedFiles != null) {
+          setState(() {
+            _imageFiles.addAll(pickedFiles);
+          });
+        }
+      } else if (status.isLimited) {
+        showCustomDialog(
+          context: context,
+          title: '접근 권한이 필요합니다.',
+          content: '사진 접근 권한을 허용하시겠습니까?',
+          onSettingsPressed: () async {
+            await openAppSettings();
+          },
+          settingsButtonText: '설정으로 이동',
+        );
+      } else if (status.isPermanentlyDenied) {
+        showCustomDialog(
+          context: context,
+          title: '접근 권한이 필요합니다.',
+          content: '사진 접근 권한을 허용하시겠습니까?',
+          onSettingsPressed: () async {
+            await openAppSettings();
+          },
+          settingsButtonText: '설정으로 이동',
+        );
+      }
+    } catch (e) {
+      Logger.error('An error occurred while picking images: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('이미지 선택 중 오류가 발생했습니다. 다시 시도해주세요.')),
+      );
     }
   }
 
@@ -79,7 +120,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
             CustomBorderContainer(
               width: double.infinity,
               height: 300.h,
-              backgroundColor: AppColors.followButtonColor,
+              // backgroundColor: AppColors.followButtonColor,
+              backgroundColor: Colors.white,
               borderColor: Colors.black,
               borderWidth: 1,
               child: Padding(
@@ -189,7 +231,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
             CustomBorderContainer(
               width: double.infinity,
               height: 350.h,
-              backgroundColor: AppColors.growingTalesPink,
+              // backgroundColor: AppColors.growingTalesPink,
+              backgroundColor: Colors.white,
               borderWidth: 1,
               borderColor: Colors.black,
               child: Padding(
@@ -214,21 +257,12 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                         ),
                       ],
                     ),
-                    // TextField(
-                    //   decoration: InputDecoration(
-                    //     hintText: 'Enter your text here',
-                    //     border: InputBorder.none,
-                    //   ),
-                    //   style: Theme.of(context).textTheme.bodySmall,
-                    //   maxLines: null,
-                    // ),
                     Expanded(child: CustomStyledTextField()),
                   ],
                 ),
               ),
             ),
             SizedBox(height: 40.h),
-            // Container(height: 2, width: double.infinity, color: Colors.black),
             Column(
               children: [
                 Row(
