@@ -15,6 +15,8 @@ import '../../core/utils/logger.dart';
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
 
+  //todo 해당 페이지 접속 시 혹은 스크롤 내리면 다시 데이터 가져오기.
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

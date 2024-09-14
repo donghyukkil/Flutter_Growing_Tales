@@ -1,6 +1,7 @@
-// for communicate firestore.
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../data/services/firestore_service.dart';
 import '../models/diary/diary.dart';
@@ -54,6 +55,26 @@ class DiaryRepository {
         error: e,
         stackTrace: stackTrace,
       );
+    }
+  }
+
+  Future<String> uploadImageToFirebase(File imageFile) async {
+    try {
+      String fileName = 'images/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child(fileName);
+
+      UploadTask uploadTask = storageReference.putFile(imageFile);
+      await uploadTask;
+
+      String downloadURL = await storageReference.getDownloadURL();
+
+      return downloadURL;
+    } catch (e) {
+      Logger.error('$e');
+
+      //todo ImageUploadException.
+      rethrow;
     }
   }
 }

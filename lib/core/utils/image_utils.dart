@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 import 'dialog_utils.dart';
 import 'logger.dart';
@@ -50,4 +54,22 @@ Future<List<XFile>> pickImages(BuildContext context) async {
   }
 
   return imageFiles;
+}
+
+Future<File> compressImage(File file) async {
+  final directory = await getTemporaryDirectory();
+  final targetPath =
+      '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+  var result = await FlutterImageCompress.compressAndGetFile(
+    file.absolute.path,
+    targetPath,
+    quality: 70,
+  );
+
+  if (result == null) {
+    throw Exception('Image compression failed.');
+  }
+
+  return File(result.path);
 }

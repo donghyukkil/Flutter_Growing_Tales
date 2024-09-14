@@ -5,10 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/custom_text.dart';
 import '../../core/widgets/user_info_tile.dart';
-import '../../data/dummy_data.dart';
 import '../../data/models/diary/diary.dart';
 
 //todo 책 통계 테이블 추가.
+//todo 성능 최적화 (이미지 업로드 긴 시간이 걸림, textField 입력 부하 줄이기 (batching, caching, throttle, debounce 적용)
+//todo textField 사용자 복사 이벤트 적용이 잘 안됨. textField 부하 탓?
+// todo diary_write -> SAVE 버튼 시 사용자에게 알림. 여러번 입력 방지.
 
 class DiaryDetailScreen extends StatelessWidget {
   final Diary diary;
@@ -17,6 +19,7 @@ class DiaryDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //todo 텍스트가 첫번째 컨테이거를 채우지 못하면 전부 firstHalf에 렌더링하기.
     String fullContext = diary.content;
     int splitIndex = (fullContext.length / 2).round();
     String firstHalf = fullContext.substring(0, splitIndex);
@@ -106,14 +109,33 @@ class DiaryDetailScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular((10.r))),
                   height: 200.h,
                   child: CarouselSlider.builder(
-                    itemCount: dummyDiary.length,
+                    itemCount: diary.imageUrls.length,
                     itemBuilder: (context, index, realIndex) {
                       return Column(
                         children: [
                           Expanded(
-                            child: Image.asset(
-                              'assets/big-image-2.png',
-                              fit: BoxFit.contain,
+                            child: Image.network(
+                              diary.imageUrls[index],
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                }
+                              },
                             ),
                           ),
                         ],

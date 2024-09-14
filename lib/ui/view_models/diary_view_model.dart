@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../data/models/diary/diary.dart';
 import '../../data/models/user/user.dart';
@@ -82,8 +83,12 @@ class DiaryViewModel extends ChangeNotifier {
     }
   }
 
+  Future<String> uploadImage(File imageFile) async {
+    return _diaryRepository.uploadImageToFirebase(imageFile);
+  }
+
   Future<void> saveDiaryEntry({
-    required List<XFile> imageFiles,
+    required List<String> imageFiles,
     required String title,
     required String contents,
     required List<String> selectedBooks,
@@ -92,7 +97,7 @@ class DiaryViewModel extends ChangeNotifier {
     _updateState(isLoading: true);
 
     try {
-      List<String> imagePaths = imageFiles.map((file) => file.path).toList();
+      List<String> imagePaths = imageFiles;
 
       Diary newDiary = Diary(
         id: '',

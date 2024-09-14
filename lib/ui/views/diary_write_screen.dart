@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:growing_tales/core/utils/logger.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
@@ -29,6 +30,7 @@ class DiaryWriteScreen extends StatefulWidget {
 // 이미지 저장 시 google storage에 저장하고 이미지 경로만 firestore에 저장
 // 코드 평가
 // 이미지 커스텀 보더 설정.
+//todo 사용자가 TextField에 긴 글을 복사하면 overFollow 에러 발생.
 
 class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   // Variables for managing widget state
@@ -43,6 +45,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   bool _showRegion = false;
   final List<String> _selectedBooks = [];
   final List<XFile> _imageFiles = [];
+  final List<String> _imagePaths = [];
   final MultiStyleTextEditingController _titleController =
       MultiStyleTextEditingController();
   final MultiStyleTextEditingController _contentController =
@@ -76,7 +79,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
     }
   }
 
-  void _saveEntry() {
+  void _saveEntry() async {
     //todo: Question: Provider.of(listen: false) 사용. save 버튼 누르면 viewModel 메서드 호출하고 페이지 이동할건데. 즉, UI 업데이트가 불필요한데, Consumer 사용을 고려할 필요가 잇을까?
     final diaryViewModel = Provider.of<DiaryViewModel>(context, listen: false);
 
@@ -86,13 +89,37 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
       'showRegion': _showRegion,
     };
 
-    diaryViewModel.saveDiaryEntry(
-      imageFiles: _imageFiles,
-      title: _titleController.text,
-      contents: _contentController.text,
-      selectedBooks: _selectedBooks,
-      settings: settings,
-    );
+    _imagePaths.clear();
+
+    try {
+      //description: image_picker: XFILE. <-> dart:io : File.
+
+      final uploadTasks = _imageFiles.map((imageFile) async {
+        File file = File(imageFile.path); // XFile -> File.
+        File compressedImage = await compressImage(file);
+        String imageUrl = await diaryViewModel.uploadImage(compressedImage);
+
+        return imageUrl;
+      }).toList();
+
+      _imagePaths.addAll(await Future.wait(uploadTasks));
+
+      diaryViewModel.saveDiaryEntry(
+        imageFiles: _imagePaths,
+        title: _titleController.text,
+        contents: _contentController.text,
+        selectedBooks: _selectedBooks,
+        settings: settings,
+      );
+
+      context.go('/statistics');
+    } catch (e) {
+      Logger.error('Error saving diary entry: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Failed to save diary entry. Please try again.')),
+      );
+    }
   }
 
   @override
