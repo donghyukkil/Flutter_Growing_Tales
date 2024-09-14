@@ -84,7 +84,7 @@ class DiaryViewModel extends ChangeNotifier {
   }
 
   Future<String> uploadImage(File imageFile) async {
-    return _diaryRepository.uploadImageToFirebase(imageFile);
+    return _diaryRepository.uploadImage(imageFile);
   }
 
   Future<void> saveDiaryEntry({

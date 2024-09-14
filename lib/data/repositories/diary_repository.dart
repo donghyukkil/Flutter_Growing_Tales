@@ -1,16 +1,17 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../data/services/firestore_service.dart';
+import '../../data/services/storage_service.dart';
 import '../models/diary/diary.dart';
 import '../../core/utils/logger.dart';
 
 class DiaryRepository {
   final FirestoreService _firestoreService;
+  final StorageService _storageService;
 
-  DiaryRepository(this._firestoreService);
+  DiaryRepository(this._firestoreService, this._storageService);
 
   Future<List<Diary>> _fetchDiaries(
       Future<QuerySnapshot> Function(CollectionReference) queryFunction) async {
@@ -58,22 +59,12 @@ class DiaryRepository {
     }
   }
 
-  Future<String> uploadImageToFirebase(File imageFile) async {
+  Future<String> uploadImage(File imageFile) async {
     try {
-      String fileName = 'images/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      Reference storageReference =
-          FirebaseStorage.instance.ref().child(fileName);
-
-      UploadTask uploadTask = storageReference.putFile(imageFile);
-      await uploadTask;
-
-      String downloadURL = await storageReference.getDownloadURL();
-
-      return downloadURL;
+      String filePath = 'images/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      return await _storageService.uploadFile(imageFile, filePath);
     } catch (e) {
-      Logger.error('$e');
-
-      //todo ImageUploadException.
+      Logger.error('Error uploading image: $e');
       rethrow;
     }
   }
