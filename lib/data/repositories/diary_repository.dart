@@ -42,8 +42,12 @@ class DiaryRepository {
 
   Future<void> addDiary(Diary diary) async {
     try {
-      await _firestoreService.getCollection('diaries').add(diary.toJson());
-      // Logger.info('Diary added successfully: ${diary.id}');
+      DocumentReference docRef =
+          await _firestoreService.getCollection('diaries').add(diary.toJson());
+
+      await docRef.update({'id': docRef.id});
+
+      Logger.info('Diary added successfully: ${docRef.id}');
     } catch (e, stackTrace) {
       Logger.error(
         'Error adding diary',

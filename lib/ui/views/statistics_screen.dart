@@ -141,7 +141,9 @@ class StatisticsScreen extends StatelessWidget {
                           context.push('/diary_detail', extra: diary);
                         },
                         child: UserDiaryTile(
-                          imageUrl: diary.imageUrl,
+                          imageUrl: diary.imageUrls.isNotEmpty
+                              ? diary.imageUrls.first
+                              : '',
                           name: userName,
                           region: userRegion,
                           diaryContent: diary.content,

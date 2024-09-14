@@ -104,7 +104,9 @@ class CommunityScreen extends StatelessWidget {
                                         user?.region ?? 'Unknown Region';
 
                                     return UserDiaryTile(
-                                      imageUrl: diary.imageUrl,
+                                      imageUrl: diary.imageUrls.isNotEmpty
+                                          ? diary.imageUrls.first
+                                          : '',
                                       name: userName,
                                       region: userRegion,
                                       diaryContent: diary.content,

@@ -24,9 +24,11 @@ mixin _$Diary {
   String get userId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  String get imageUrl => throw _privateConstructorUsedError;
+  List<String> get imageUrls => throw _privateConstructorUsedError;
   List<String> get likes => throw _privateConstructorUsedError;
   List<String> get comments => throw _privateConstructorUsedError;
+  List<String> get selectedBooks => throw _privateConstructorUsedError;
+  Map<String, bool> get settings => throw _privateConstructorUsedError;
   @TimestampConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @TimestampConverter()
@@ -47,9 +49,11 @@ abstract class $DiaryCopyWith<$Res> {
       String userId,
       String title,
       String content,
-      String imageUrl,
+      List<String> imageUrls,
       List<String> likes,
       List<String> comments,
+      List<String> selectedBooks,
+      Map<String, bool> settings,
       @TimestampConverter() DateTime? createdAt,
       @TimestampConverter() DateTime? updatedAt});
 }
@@ -71,9 +75,11 @@ class _$DiaryCopyWithImpl<$Res, $Val extends Diary>
     Object? userId = null,
     Object? title = null,
     Object? content = null,
-    Object? imageUrl = null,
+    Object? imageUrls = null,
     Object? likes = null,
     Object? comments = null,
+    Object? selectedBooks = null,
+    Object? settings = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -94,10 +100,10 @@ class _$DiaryCopyWithImpl<$Res, $Val extends Diary>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      imageUrl: null == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+      imageUrls: null == imageUrls
+          ? _value.imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       likes: null == likes
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
@@ -106,6 +112,14 @@ class _$DiaryCopyWithImpl<$Res, $Val extends Diary>
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      selectedBooks: null == selectedBooks
+          ? _value.selectedBooks
+          : selectedBooks // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      settings: null == settings
+          ? _value.settings
+          : settings // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -130,9 +144,11 @@ abstract class _$$DiaryImplCopyWith<$Res> implements $DiaryCopyWith<$Res> {
       String userId,
       String title,
       String content,
-      String imageUrl,
+      List<String> imageUrls,
       List<String> likes,
       List<String> comments,
+      List<String> selectedBooks,
+      Map<String, bool> settings,
       @TimestampConverter() DateTime? createdAt,
       @TimestampConverter() DateTime? updatedAt});
 }
@@ -152,9 +168,11 @@ class __$$DiaryImplCopyWithImpl<$Res>
     Object? userId = null,
     Object? title = null,
     Object? content = null,
-    Object? imageUrl = null,
+    Object? imageUrls = null,
     Object? likes = null,
     Object? comments = null,
+    Object? selectedBooks = null,
+    Object? settings = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
@@ -175,10 +193,10 @@ class __$$DiaryImplCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      imageUrl: null == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+      imageUrls: null == imageUrls
+          ? _value._imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       likes: null == likes
           ? _value._likes
           : likes // ignore: cast_nullable_to_non_nullable
@@ -187,6 +205,14 @@ class __$$DiaryImplCopyWithImpl<$Res>
           ? _value._comments
           : comments // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      selectedBooks: null == selectedBooks
+          ? _value._selectedBooks
+          : selectedBooks // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      settings: null == settings
+          ? _value._settings
+          : settings // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -207,13 +233,18 @@ class _$DiaryImpl implements _Diary {
       required this.userId,
       required this.title,
       required this.content,
-      this.imageUrl = '',
+      final List<String> imageUrls = const [],
       final List<String> likes = const [],
       final List<String> comments = const [],
+      final List<String> selectedBooks = const [],
+      final Map<String, bool> settings = const {},
       @TimestampConverter() this.createdAt,
       @TimestampConverter() this.updatedAt})
-      : _likes = likes,
-        _comments = comments;
+      : _imageUrls = imageUrls,
+        _likes = likes,
+        _comments = comments,
+        _selectedBooks = selectedBooks,
+        _settings = settings;
 
   factory _$DiaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$DiaryImplFromJson(json);
@@ -226,9 +257,15 @@ class _$DiaryImpl implements _Diary {
   final String title;
   @override
   final String content;
+  final List<String> _imageUrls;
   @override
   @JsonKey()
-  final String imageUrl;
+  List<String> get imageUrls {
+    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_imageUrls);
+  }
+
   final List<String> _likes;
   @override
   @JsonKey()
@@ -247,6 +284,24 @@ class _$DiaryImpl implements _Diary {
     return EqualUnmodifiableListView(_comments);
   }
 
+  final List<String> _selectedBooks;
+  @override
+  @JsonKey()
+  List<String> get selectedBooks {
+    if (_selectedBooks is EqualUnmodifiableListView) return _selectedBooks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_selectedBooks);
+  }
+
+  final Map<String, bool> _settings;
+  @override
+  @JsonKey()
+  Map<String, bool> get settings {
+    if (_settings is EqualUnmodifiableMapView) return _settings;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_settings);
+  }
+
   @override
   @TimestampConverter()
   final DateTime? createdAt;
@@ -256,7 +311,7 @@ class _$DiaryImpl implements _Diary {
 
   @override
   String toString() {
-    return 'Diary(id: $id, userId: $userId, title: $title, content: $content, imageUrl: $imageUrl, likes: $likes, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Diary(id: $id, userId: $userId, title: $title, content: $content, imageUrls: $imageUrls, likes: $likes, comments: $comments, selectedBooks: $selectedBooks, settings: $settings, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -268,10 +323,13 @@ class _$DiaryImpl implements _Diary {
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
-            (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl) &&
+            const DeepCollectionEquality()
+                .equals(other._imageUrls, _imageUrls) &&
             const DeepCollectionEquality().equals(other._likes, _likes) &&
             const DeepCollectionEquality().equals(other._comments, _comments) &&
+            const DeepCollectionEquality()
+                .equals(other._selectedBooks, _selectedBooks) &&
+            const DeepCollectionEquality().equals(other._settings, _settings) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -286,9 +344,11 @@ class _$DiaryImpl implements _Diary {
       userId,
       title,
       content,
-      imageUrl,
+      const DeepCollectionEquality().hash(_imageUrls),
       const DeepCollectionEquality().hash(_likes),
       const DeepCollectionEquality().hash(_comments),
+      const DeepCollectionEquality().hash(_selectedBooks),
+      const DeepCollectionEquality().hash(_settings),
       createdAt,
       updatedAt);
 
@@ -312,9 +372,11 @@ abstract class _Diary implements Diary {
       required final String userId,
       required final String title,
       required final String content,
-      final String imageUrl,
+      final List<String> imageUrls,
       final List<String> likes,
       final List<String> comments,
+      final List<String> selectedBooks,
+      final Map<String, bool> settings,
       @TimestampConverter() final DateTime? createdAt,
       @TimestampConverter() final DateTime? updatedAt}) = _$DiaryImpl;
 
@@ -329,11 +391,15 @@ abstract class _Diary implements Diary {
   @override
   String get content;
   @override
-  String get imageUrl;
+  List<String> get imageUrls;
   @override
   List<String> get likes;
   @override
   List<String> get comments;
+  @override
+  List<String> get selectedBooks;
+  @override
+  Map<String, bool> get settings;
   @override
   @TimestampConverter()
   DateTime? get createdAt;

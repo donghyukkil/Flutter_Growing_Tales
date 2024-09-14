@@ -1,30 +1,32 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:growing_tales/core/constants/app_colors.dart';
 
 import '../../core/controllers/multi_style_text_editing_controller.dart';
 
 class CustomStyledTextField extends StatefulWidget {
-  const CustomStyledTextField({super.key});
+  final MultiStyleTextEditingController titleController;
+  final MultiStyleTextEditingController contentController;
+
+  const CustomStyledTextField({
+    super.key,
+    required this.titleController,
+    required this.contentController,
+  });
 
   @override
   State<CustomStyledTextField> createState() => _CustomStyledTextFieldState();
 }
 
 class _CustomStyledTextFieldState extends State<CustomStyledTextField> {
-  late MultiStyleTextEditingController _titleController;
-  late MultiStyleTextEditingController _contentController;
-
   @override
   void initState() {
     super.initState();
-    _titleController = MultiStyleTextEditingController();
-    _contentController = MultiStyleTextEditingController();
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _contentController.dispose();
     super.dispose();
   }
 
@@ -34,7 +36,7 @@ class _CustomStyledTextFieldState extends State<CustomStyledTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
-          controller: _titleController,
+          controller: widget.titleController,
           maxLines: 1,
           style: TextStyle(
             height: 1.2,
@@ -52,7 +54,7 @@ class _CustomStyledTextFieldState extends State<CustomStyledTextField> {
                       width: 20.w,
                       height: 20.h,
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: AppColors.growingTalesRed,
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
@@ -60,7 +62,6 @@ class _CustomStyledTextFieldState extends State<CustomStyledTextField> {
                     Text('Title'),
                   ],
                 )),
-            // labelText: 'Title',
             border: InputBorder.none,
             hintText: 'Enter title here',
             contentPadding:
@@ -71,7 +72,7 @@ class _CustomStyledTextFieldState extends State<CustomStyledTextField> {
           cursorWidth: 1.5,
         ),
         TextField(
-          controller: _contentController,
+          controller: widget.contentController,
           maxLines: null,
           style: TextStyle(
             height: 1.2,
@@ -88,7 +89,7 @@ class _CustomStyledTextFieldState extends State<CustomStyledTextField> {
                       width: 20.w,
                       height: 20.h,
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: AppColors.growingTalesBlue,
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),

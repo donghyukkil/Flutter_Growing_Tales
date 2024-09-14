@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../data/models/diary/diary.dart';
 import '../../data/models/user/user.dart';
@@ -78,6 +79,39 @@ class DiaryViewModel extends ChangeNotifier {
         errorMessage: e.toString(),
         isLoading: false,
       );
+    }
+  }
+
+  Future<void> saveDiaryEntry({
+    required List<XFile> imageFiles,
+    required String title,
+    required String contents,
+    required List<String> selectedBooks,
+    required Map<String, bool> settings,
+  }) async {
+    _updateState(isLoading: true);
+
+    try {
+      List<String> imagePaths = imageFiles.map((file) => file.path).toList();
+
+      Diary newDiary = Diary(
+        id: '',
+        userId: _usersViewModel.currentUser?.id ?? '',
+        title: title,
+        content: contents,
+        imageUrls: imagePaths,
+        selectedBooks: selectedBooks,
+        settings: settings,
+        createdAt: DateTime.now(),
+      );
+
+      await _diaryRepository.addDiary(newDiary);
+      await fetchDiariesByUserId(newDiary.userId);
+
+      _updateState(isLoading: false);
+    } catch (e) {
+      _updateState(errorMessage: e.toString(), isLoading: false);
+      Logger.error('Failed to save diary entry: $e');
     }
   }
 

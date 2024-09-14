@@ -4,17 +4,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../core/controllers/multi_style_text_editing_controller.dart';
 import '../../core/widgets/circular_back_button.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/custom_border_container.dart';
 import '../../core/widgets/custom_styled_text_field.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/widgets/custom_checkbox.dart';
-
 import '../../core/utils/image_utils.dart';
 import '../../ui/components/book_list_section.dart';
+import '../../ui/view_models/diary_view_model.dart';
 
 class DiaryWriteScreen extends StatefulWidget {
   const DiaryWriteScreen({super.key});
@@ -23,27 +25,39 @@ class DiaryWriteScreen extends StatefulWidget {
   State<DiaryWriteScreen> createState() => _DiaryWriteScreenState();
 }
 
-//todo flutter_image_compress
+//todo flutter_image_compress, 이미지 변환, path_provider
+// 이미지 저장 시 google storage에 저장하고 이미지 경로만 firestore에 저장
+// 코드 평가
+// 이미지 커스텀 보더 설정.
 
 class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
-  String _text = '';
+  // Variables for managing widget state
   int _currentPicture = 0;
   bool _showOnlyTop = true;
-
-  final List<XFile> _imageFiles = [];
-  final ImagePicker _picker = ImagePicker();
-  final TextEditingController _controller = TextEditingController();
   final CarouselSliderController _carouselSliderController =
       CarouselSliderController();
+
+  // Variables used for saving data to FireStore via diaryViewmodel.
+  bool _isPublic = false;
+  bool _showName = false;
+  bool _showRegion = false;
+  final List<String> _selectedBooks = [];
+  final List<XFile> _imageFiles = [];
+  final MultiStyleTextEditingController _titleController =
+      MultiStyleTextEditingController();
+  final MultiStyleTextEditingController _contentController =
+      MultiStyleTextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(() {
-      setState(() {
-        _text = _controller.text;
-      });
-    });
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _contentController.dispose();
+    super.dispose();
   }
 
   void _toggleTopView() {
@@ -51,8 +65,6 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
       _showOnlyTop = !_showOnlyTop;
     });
   }
-
-  // 이미지 커스텀 보더 설정.
 
   Future<void> _pickImage() async {
     final images = await pickImages(context);
@@ -62,6 +74,25 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
         _imageFiles.addAll(images);
       });
     }
+  }
+
+  void _saveEntry() {
+    //todo: Question: Provider.of(listen: false) 사용. save 버튼 누르면 viewModel 메서드 호출하고 페이지 이동할건데. 즉, UI 업데이트가 불필요한데, Consumer 사용을 고려할 필요가 잇을까?
+    final diaryViewModel = Provider.of<DiaryViewModel>(context, listen: false);
+
+    final settings = {
+      'publicOption': _isPublic,
+      'showName': _showName,
+      'showRegion': _showRegion,
+    };
+
+    diaryViewModel.saveDiaryEntry(
+      imageFiles: _imageFiles,
+      title: _titleController.text,
+      contents: _contentController.text,
+      selectedBooks: _selectedBooks,
+      settings: settings,
+    );
   }
 
   @override
@@ -224,7 +255,11 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                         ),
                       ],
                     ),
-                    Expanded(child: CustomStyledTextField()),
+                    Expanded(
+                        child: CustomStyledTextField(
+                      titleController: _titleController,
+                      contentController: _contentController,
+                    )),
                   ],
                 ),
               ),
@@ -295,9 +330,11 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       Row(
                         children: [
                           CustomCheckbox(
-                            isChecked: false,
+                            isChecked: _isPublic,
                             onChanged: (bool newValue) {
-                              print('체크박스 상태가 변경됨: $newValue');
+                              setState(() {
+                                _isPublic = newValue;
+                              });
                             },
                             checkColor: AppColors.followButtonColor,
                             uncheckedColor: Colors.white,
@@ -311,9 +348,11 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       Row(
                         children: [
                           CustomCheckbox(
-                            isChecked: false,
+                            isChecked: _showName,
                             onChanged: (bool newValue) {
-                              print('체크박스 상태가 변경됨: $newValue');
+                              setState(() {
+                                _showName = newValue;
+                              });
                             },
                             checkColor: AppColors.followButtonColor,
                             uncheckedColor: Colors.white,
@@ -327,9 +366,11 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       Row(
                         children: [
                           CustomCheckbox(
-                            isChecked: false,
+                            isChecked: _showRegion,
                             onChanged: (bool newValue) {
-                              print('체크박스 상태가 변경됨: $newValue');
+                              setState(() {
+                                _showRegion = newValue;
+                              });
                             },
                             checkColor: AppColors.followButtonColor,
                             uncheckedColor: Colors.white,
@@ -354,7 +395,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                           SizedBox(width: 30.w),
                           Expanded(
                             child: CustomButton(
-                              onPressed: () {},
+                              onPressed: _saveEntry,
                               title: 'Save',
                               backGroundColor: Colors.black,
                               textColor: Colors.white,

@@ -13,9 +13,11 @@ class Diary with _$Diary {
     required String userId,
     required String title,
     required String content,
-    @Default('') String imageUrl,
+    @Default([]) List<String> imageUrls,
     @Default([]) List<String> likes,
     @Default([]) List<String> comments,
+    @Default([]) List<String> selectedBooks,
+    @Default({}) Map<String, bool> settings,
     @TimestampConverter() DateTime? createdAt,
     @TimestampConverter() DateTime? updatedAt,
   }) = _Diary;
