@@ -109,7 +109,7 @@ class DiaryViewModel extends ChangeNotifier {
     return _diaryRepository.uploadImage(imageFile);
   }
 
-  Future<void> saveDiaryEntry({
+  Future<bool> saveDiaryEntry({
     required List<String> imageFiles,
     required String title,
     required String contents,
@@ -119,6 +119,21 @@ class DiaryViewModel extends ChangeNotifier {
     _updateState(isLoading: true);
 
     try {
+      //todo pros and cons about Allowing Diary Creation Without Login.
+
+      final currentUser = _usersViewModel.currentUser;
+
+      if (currentUser == null || currentUser.id.isEmpty) {
+        Logger.error('User must be logged in to create a diary entry');
+
+        _updateState(
+          errorMessage: 'You must be logged in to create a diary entry',
+          isLoading: false,
+        );
+
+        return false;
+      }
+
       List<String> imagePaths = imageFiles;
 
       Diary newDiary = Diary(
@@ -133,12 +148,17 @@ class DiaryViewModel extends ChangeNotifier {
       );
 
       await _diaryRepository.addDiary(newDiary);
+
       await fetchDiariesByUserId(newDiary.userId);
 
       _updateState(isLoading: false);
+
+      return true;
     } catch (e) {
       _updateState(errorMessage: e.toString(), isLoading: false);
       Logger.error('Failed to save diary entry: $e');
+
+      return false;
     }
   }
 

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/controllers/multi_style_text_editing_controller.dart';
+import '../../core/utils/dialog_utils.dart';
 import '../../core/widgets/circular_back_button.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/custom_border_container.dart';
@@ -92,8 +93,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
     _imagePaths.clear();
 
     try {
-      //description: image_picker: XFILE. <-> dart:io : File.
-
+      // Note: image_picker: XFILE. <-> dart:io : File.
       final uploadTasks = _imageFiles.map((imageFile) async {
         File file = File(imageFile.path); // XFile -> File.
         File compressedImage = await compressImage(file);
@@ -104,21 +104,41 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
 
       _imagePaths.addAll(await Future.wait(uploadTasks));
 
-      diaryViewModel.saveDiaryEntry(
-        imageFiles: _imagePaths,
+      final imagesToSave =
+          _imagePaths.isNotEmpty ? _imagePaths : ['assets/dummy1.png'];
+
+      bool success = await diaryViewModel.saveDiaryEntry(
+        imageFiles: imagesToSave,
         title: _titleController.text,
         contents: _contentController.text,
         selectedBooks: _selectedBooks,
         settings: settings,
       );
 
-      context.go('/statistics');
+      if (success) {
+        showCustomDialog(
+          context: context,
+          title: 'Success',
+          content: 'Your diary entry has been saved successfully!',
+          onSettingsPressed: () async {
+            context.pop();
+            context.go('/statistics');
+          },
+          settingsButtonText: 'Ok',
+        );
+      } else {
+        showCustomDialog(
+          context: context,
+          title: 'Login Required',
+          content: 'You must be logged in to create a diary entry.',
+          onSettingsPressed: () async {
+            context.pop();
+          },
+          settingsButtonText: 'Login',
+        );
+      }
     } catch (e) {
       Logger.error('Error saving diary entry: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Failed to save diary entry. Please try again.')),
-      );
     }
   }
 
@@ -420,6 +440,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                             ),
                           ),
                           SizedBox(width: 30.w),
+                          //todo save 버튼 한번 만다르게 수정.
+                          //todo 로딩 인디케이터.
                           Expanded(
                             child: CustomButton(
                               onPressed: _saveEntry,

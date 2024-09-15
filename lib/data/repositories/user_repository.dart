@@ -127,6 +127,11 @@ class UserRepository {
 
   Future<User?> fetchUserById(String userId) async {
     try {
+      if (userId.isEmpty) {
+        Logger.info('UserId is empty, retruning null');
+
+        return null;
+      }
       final doc = await _firestoreService.getUserDoc(userId);
 
       if (doc.exists) {
