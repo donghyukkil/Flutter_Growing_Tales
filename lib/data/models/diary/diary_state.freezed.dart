@@ -20,6 +20,8 @@ mixin _$DiaryState {
   List<Diary> get userDiaries => throw _privateConstructorUsedError;
   List<Diary> get allDiaries => throw _privateConstructorUsedError;
   List<Diary> get followedUserDiaries => throw _privateConstructorUsedError;
+  List<DiaryWithUser> get allDiariesWithUser =>
+      throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   User? get currentUser => throw _privateConstructorUsedError;
 
@@ -39,6 +41,7 @@ abstract class $DiaryStateCopyWith<$Res> {
       List<Diary> userDiaries,
       List<Diary> allDiaries,
       List<Diary> followedUserDiaries,
+      List<DiaryWithUser> allDiariesWithUser,
       String? errorMessage,
       User? currentUser});
 
@@ -62,6 +65,7 @@ class _$DiaryStateCopyWithImpl<$Res, $Val extends DiaryState>
     Object? userDiaries = null,
     Object? allDiaries = null,
     Object? followedUserDiaries = null,
+    Object? allDiariesWithUser = null,
     Object? errorMessage = freezed,
     Object? currentUser = freezed,
   }) {
@@ -82,6 +86,10 @@ class _$DiaryStateCopyWithImpl<$Res, $Val extends DiaryState>
           ? _value.followedUserDiaries
           : followedUserDiaries // ignore: cast_nullable_to_non_nullable
               as List<Diary>,
+      allDiariesWithUser: null == allDiariesWithUser
+          ? _value.allDiariesWithUser
+          : allDiariesWithUser // ignore: cast_nullable_to_non_nullable
+              as List<DiaryWithUser>,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -119,6 +127,7 @@ abstract class _$$DiaryStateImplCopyWith<$Res>
       List<Diary> userDiaries,
       List<Diary> allDiaries,
       List<Diary> followedUserDiaries,
+      List<DiaryWithUser> allDiariesWithUser,
       String? errorMessage,
       User? currentUser});
 
@@ -141,6 +150,7 @@ class __$$DiaryStateImplCopyWithImpl<$Res>
     Object? userDiaries = null,
     Object? allDiaries = null,
     Object? followedUserDiaries = null,
+    Object? allDiariesWithUser = null,
     Object? errorMessage = freezed,
     Object? currentUser = freezed,
   }) {
@@ -161,6 +171,10 @@ class __$$DiaryStateImplCopyWithImpl<$Res>
           ? _value._followedUserDiaries
           : followedUserDiaries // ignore: cast_nullable_to_non_nullable
               as List<Diary>,
+      allDiariesWithUser: null == allDiariesWithUser
+          ? _value._allDiariesWithUser
+          : allDiariesWithUser // ignore: cast_nullable_to_non_nullable
+              as List<DiaryWithUser>,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -181,11 +195,13 @@ class _$DiaryStateImpl implements _DiaryState {
       final List<Diary> userDiaries = const [],
       final List<Diary> allDiaries = const [],
       final List<Diary> followedUserDiaries = const [],
+      final List<DiaryWithUser> allDiariesWithUser = const [],
       this.errorMessage,
       this.currentUser})
       : _userDiaries = userDiaries,
         _allDiaries = allDiaries,
-        _followedUserDiaries = followedUserDiaries;
+        _followedUserDiaries = followedUserDiaries,
+        _allDiariesWithUser = allDiariesWithUser;
 
   @override
   @JsonKey()
@@ -218,6 +234,16 @@ class _$DiaryStateImpl implements _DiaryState {
     return EqualUnmodifiableListView(_followedUserDiaries);
   }
 
+  final List<DiaryWithUser> _allDiariesWithUser;
+  @override
+  @JsonKey()
+  List<DiaryWithUser> get allDiariesWithUser {
+    if (_allDiariesWithUser is EqualUnmodifiableListView)
+      return _allDiariesWithUser;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_allDiariesWithUser);
+  }
+
   @override
   final String? errorMessage;
   @override
@@ -225,7 +251,7 @@ class _$DiaryStateImpl implements _DiaryState {
 
   @override
   String toString() {
-    return 'DiaryState(isLoading: $isLoading, userDiaries: $userDiaries, allDiaries: $allDiaries, followedUserDiaries: $followedUserDiaries, errorMessage: $errorMessage, currentUser: $currentUser)';
+    return 'DiaryState(isLoading: $isLoading, userDiaries: $userDiaries, allDiaries: $allDiaries, followedUserDiaries: $followedUserDiaries, allDiariesWithUser: $allDiariesWithUser, errorMessage: $errorMessage, currentUser: $currentUser)';
   }
 
   @override
@@ -241,6 +267,8 @@ class _$DiaryStateImpl implements _DiaryState {
                 .equals(other._allDiaries, _allDiaries) &&
             const DeepCollectionEquality()
                 .equals(other._followedUserDiaries, _followedUserDiaries) &&
+            const DeepCollectionEquality()
+                .equals(other._allDiariesWithUser, _allDiariesWithUser) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.currentUser, currentUser) ||
@@ -254,6 +282,7 @@ class _$DiaryStateImpl implements _DiaryState {
       const DeepCollectionEquality().hash(_userDiaries),
       const DeepCollectionEquality().hash(_allDiaries),
       const DeepCollectionEquality().hash(_followedUserDiaries),
+      const DeepCollectionEquality().hash(_allDiariesWithUser),
       errorMessage,
       currentUser);
 
@@ -270,6 +299,7 @@ abstract class _DiaryState implements DiaryState {
       final List<Diary> userDiaries,
       final List<Diary> allDiaries,
       final List<Diary> followedUserDiaries,
+      final List<DiaryWithUser> allDiariesWithUser,
       final String? errorMessage,
       final User? currentUser}) = _$DiaryStateImpl;
 
@@ -281,6 +311,8 @@ abstract class _DiaryState implements DiaryState {
   List<Diary> get allDiaries;
   @override
   List<Diary> get followedUserDiaries;
+  @override
+  List<DiaryWithUser> get allDiariesWithUser;
   @override
   String? get errorMessage;
   @override

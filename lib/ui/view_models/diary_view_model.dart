@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../../data/models/diary/diary.dart';
 import '../../data/models/user/user.dart';
 import '../../data/models/diary/diary_state.dart';
+import '../../data/models/diary/diary_with_user.dart';
 import '../../ui/view_models/users_view_model.dart';
 import '../../data/repositories/diary_repository.dart';
 import '../../core/utils/logger.dart';
@@ -59,30 +60,51 @@ class DiaryViewModel extends ChangeNotifier {
 
     try {
       final allDiaries = await _diaryRepository.getAllDiaries();
-      //todo 계속된 요청 해결하기. 해당 스크린이 나타날 때 한번만 fetch 되도록.
-      // Logger.info('test allDiares $allDiaries');
+      final currentUser = _usersViewModel.currentUser;
 
-      _updateState(allDiaries: allDiaries, isLoading: false);
+      final filteredDiaries = allDiaries.where((diary) {
+        return diary.userId != currentUser?.id &&
+            diary.settings['publicOption'] == true;
+      }).toList();
+
+      List<DiaryWithUser> diariesWithUser = [];
+
+      for (var diary in filteredDiaries) {
+        // Note: Diary model does not contain user-specific information like user.name.
+        // Therefore, we fetch the user information based on the userId from the diary.
+        User? fetchedUserInformation =
+            await _usersViewModel.getUserById(diary.userId);
+
+        if (fetchedUserInformation != null) {
+          diariesWithUser.add(
+            DiaryWithUser(
+              diary: diary,
+              userName: diary.settings['showName'] == true
+                  ? fetchedUserInformation.name
+                  : 'Anonymous',
+              userRegion: diary.settings['showRegion'] == true
+                  ? fetchedUserInformation.region
+                  : 'Region Hidden',
+            ),
+          );
+        } else {
+          diariesWithUser.add(
+            DiaryWithUser(
+              diary: diary,
+              userName: 'Unknown User',
+              userRegion: 'Unknown Region',
+            ),
+          );
+        }
+      }
+
+      _updateState(allDiariesWithUser: diariesWithUser, isLoading: false);
     } catch (e) {
       _updateState(errorMessage: e.toString(), isLoading: false);
     }
   }
 
   // for CRUD Diary_screen.
-  Future<void> addDiary(Diary diary) async {
-    _state = _state.copyWith(isLoading: true);
-
-    try {
-      await _diaryRepository.addDiary(diary);
-      await fetchDiariesByUserId(diary.userId);
-    } catch (e) {
-      _state = _state.copyWith(
-        errorMessage: e.toString(),
-        isLoading: false,
-      );
-    }
-  }
-
   Future<String> uploadImage(File imageFile) async {
     return _diaryRepository.uploadImage(imageFile);
   }
@@ -124,7 +146,7 @@ class DiaryViewModel extends ChangeNotifier {
   void _updateState({
     bool? isLoading,
     List<Diary>? userDiaries,
-    List<Diary>? allDiaries,
+    List<DiaryWithUser>? allDiariesWithUser,
     String? errorMessage,
     DiaryState? newState,
     User? currentUser,
@@ -135,12 +157,12 @@ class DiaryViewModel extends ChangeNotifier {
       _state = _state.copyWith(
         isLoading: isLoading ?? _state.isLoading,
         userDiaries: userDiaries ?? _state.userDiaries,
-        allDiaries: allDiaries ?? _state.allDiaries,
+        allDiariesWithUser: allDiariesWithUser ?? _state.allDiariesWithUser,
         errorMessage: errorMessage,
         currentUser: currentUser ?? _state.currentUser,
       );
 
-      Logger.info('Updated diary state: $_state');
+      // Logger.info('Updated diary state: $_state');
 
       notifyListeners();
     }
@@ -152,7 +174,7 @@ class DiaryViewModel extends ChangeNotifier {
     _updateState(newState: DiaryState());
   }
 
-  // for ChangeNotifierProxyProvider (Dependency Injection).
+  // ChangeNotifierProxyProvider for Dependency Injection.
   void updateDependencies(
     DiaryRepository diaryRepository,
     UsersViewModel usersViewModel,

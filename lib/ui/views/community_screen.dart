@@ -15,10 +15,18 @@ import '../../core/utils/logger.dart';
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
 
-  //todo 해당 페이지 접속 시 혹은 스크롤 내리면 다시 데이터 가져오기.
-
+  //todo 해당 페이지 접속 시 혹은 스크롤 내리면 다시 데이터 가져오기. 무한 스크롤 구현하기. 캐싱도 고려
+//todo firebase에 없는 userName userRegion 등 업데이트하는 셋팅 페이지 만들기. 라디오 버튼으로 isPublic도 함께.
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final diaryViewModel = context.read<DiaryViewModel>();
+      if (!diaryViewModel.state.isLoading &&
+          diaryViewModel.state.allDiariesWithUser.isEmpty) {
+        diaryViewModel.fetchAllDiaries();
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(title: Text('Community')),
       body: Padding(
@@ -58,75 +66,43 @@ class CommunityScreen extends StatelessWidget {
                   SizedBox(
                     height: 30.h,
                   ),
-                  Expanded(
-                    child: Consumer<DiaryViewModel>(
-                      builder: (context, diaryViewModel, child) {
-                        final diaries =
-                            context.read<DiaryViewModel>().state.allDiaries;
+                  Expanded(child: Consumer<DiaryViewModel>(
+                    builder: (context, diaryViewModel, child) {
+                      final diariesWithUser = context
+                          .watch<DiaryViewModel>()
+                          .state
+                          .allDiariesWithUser;
 
-                        // Fetch all diaries only once using addPostFrameCallback
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          if (diaries.isEmpty) {
-                            diaryViewModel.fetchAllDiaries();
-                          }
-                        });
+                      if (diaryViewModel.state.isLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                        if (diaryViewModel.state.isLoading) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-
-                        if (diaries.isEmpty) {
-                          return const Center(
-                            child: Text('No Diaries Found'),
-                          );
-                        }
-
-                        return Scrollbar(
-                          child: ListView.builder(
-                            itemCount: diaries.length,
-                            itemBuilder: (context, index) {
-                              final diary = diaries[index];
-
-                              return FutureBuilder<User?>(
-                                future: context
-                                    .read<UsersViewModel>()
-                                    .getUserById(diary.userId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Container();
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else if (snapshot.hasData) {
-                                    final user = snapshot.data;
-                                    final userName =
-                                        user?.name ?? 'Unknown User';
-                                    final userRegion =
-                                        user?.region ?? 'Unknown Region';
-
-                                    return UserDiaryTile(
-                                      imageUrl: diary.imageUrls.isNotEmpty
-                                          ? diary.imageUrls.first
-                                          : '',
-                                      name: userName,
-                                      region: userRegion,
-                                      diaryContent: diary.content,
-                                      onFollowPressed: () {
-                                        Logger.info('Follow button pressed');
-                                      },
-                                    );
-                                  } else {
-                                    return const Text('User not found');
-                                  }
-                                },
-                              );
-                            },
-                          ),
+                      if (diariesWithUser.isEmpty) {
+                        return const Center(
+                          child: Text('No Diaries Found'),
                         );
-                      },
-                    ),
-                  ),
+                      }
+
+                      return ListView.builder(
+                        itemCount: diariesWithUser.length,
+                        itemBuilder: (context, index) {
+                          final diaryWithUser = diariesWithUser[index];
+
+                          return UserDiaryTile(
+                            imageUrl: diaryWithUser.diary.imageUrls.isNotEmpty
+                                ? diaryWithUser.diary.imageUrls.first
+                                : '',
+                            name: diaryWithUser.userName,
+                            region: diaryWithUser.userRegion,
+                            diaryContent: diaryWithUser.diary.content,
+                            onFollowPressed: () {
+                              Logger.info('Follow button pressed');
+                            },
+                          );
+                        },
+                      );
+                    },
+                  )),
                 ],
               ),
             ),
