@@ -24,6 +24,11 @@ mixin _$DiaryState {
       throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   User? get currentUser => throw _privateConstructorUsedError;
+  bool get isSaved => throw _privateConstructorUsedError;
+  bool get isPublic => throw _privateConstructorUsedError;
+  bool get showName => throw _privateConstructorUsedError;
+  bool get showRegion => throw _privateConstructorUsedError;
+  List<XFile> get imageFiles => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DiaryStateCopyWith<DiaryState> get copyWith =>
@@ -43,7 +48,12 @@ abstract class $DiaryStateCopyWith<$Res> {
       List<Diary> followedUserDiaries,
       List<DiaryWithUser> allDiariesWithUser,
       String? errorMessage,
-      User? currentUser});
+      User? currentUser,
+      bool isSaved,
+      bool isPublic,
+      bool showName,
+      bool showRegion,
+      List<XFile> imageFiles});
 
   $UserCopyWith<$Res>? get currentUser;
 }
@@ -68,6 +78,11 @@ class _$DiaryStateCopyWithImpl<$Res, $Val extends DiaryState>
     Object? allDiariesWithUser = null,
     Object? errorMessage = freezed,
     Object? currentUser = freezed,
+    Object? isSaved = null,
+    Object? isPublic = null,
+    Object? showName = null,
+    Object? showRegion = null,
+    Object? imageFiles = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -98,6 +113,26 @@ class _$DiaryStateCopyWithImpl<$Res, $Val extends DiaryState>
           ? _value.currentUser
           : currentUser // ignore: cast_nullable_to_non_nullable
               as User?,
+      isSaved: null == isSaved
+          ? _value.isSaved
+          : isSaved // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isPublic: null == isPublic
+          ? _value.isPublic
+          : isPublic // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showName: null == showName
+          ? _value.showName
+          : showName // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showRegion: null == showRegion
+          ? _value.showRegion
+          : showRegion // ignore: cast_nullable_to_non_nullable
+              as bool,
+      imageFiles: null == imageFiles
+          ? _value.imageFiles
+          : imageFiles // ignore: cast_nullable_to_non_nullable
+              as List<XFile>,
     ) as $Val);
   }
 
@@ -129,7 +164,12 @@ abstract class _$$DiaryStateImplCopyWith<$Res>
       List<Diary> followedUserDiaries,
       List<DiaryWithUser> allDiariesWithUser,
       String? errorMessage,
-      User? currentUser});
+      User? currentUser,
+      bool isSaved,
+      bool isPublic,
+      bool showName,
+      bool showRegion,
+      List<XFile> imageFiles});
 
   @override
   $UserCopyWith<$Res>? get currentUser;
@@ -153,6 +193,11 @@ class __$$DiaryStateImplCopyWithImpl<$Res>
     Object? allDiariesWithUser = null,
     Object? errorMessage = freezed,
     Object? currentUser = freezed,
+    Object? isSaved = null,
+    Object? isPublic = null,
+    Object? showName = null,
+    Object? showRegion = null,
+    Object? imageFiles = null,
   }) {
     return _then(_$DiaryStateImpl(
       isLoading: null == isLoading
@@ -183,6 +228,26 @@ class __$$DiaryStateImplCopyWithImpl<$Res>
           ? _value.currentUser
           : currentUser // ignore: cast_nullable_to_non_nullable
               as User?,
+      isSaved: null == isSaved
+          ? _value.isSaved
+          : isSaved // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isPublic: null == isPublic
+          ? _value.isPublic
+          : isPublic // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showName: null == showName
+          ? _value.showName
+          : showName // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showRegion: null == showRegion
+          ? _value.showRegion
+          : showRegion // ignore: cast_nullable_to_non_nullable
+              as bool,
+      imageFiles: null == imageFiles
+          ? _value._imageFiles
+          : imageFiles // ignore: cast_nullable_to_non_nullable
+              as List<XFile>,
     ));
   }
 }
@@ -197,11 +262,17 @@ class _$DiaryStateImpl implements _DiaryState {
       final List<Diary> followedUserDiaries = const [],
       final List<DiaryWithUser> allDiariesWithUser = const [],
       this.errorMessage,
-      this.currentUser})
+      this.currentUser,
+      this.isSaved = false,
+      this.isPublic = false,
+      this.showName = false,
+      this.showRegion = false,
+      final List<XFile> imageFiles = const []})
       : _userDiaries = userDiaries,
         _allDiaries = allDiaries,
         _followedUserDiaries = followedUserDiaries,
-        _allDiariesWithUser = allDiariesWithUser;
+        _allDiariesWithUser = allDiariesWithUser,
+        _imageFiles = imageFiles;
 
   @override
   @JsonKey()
@@ -248,10 +319,30 @@ class _$DiaryStateImpl implements _DiaryState {
   final String? errorMessage;
   @override
   final User? currentUser;
+  @override
+  @JsonKey()
+  final bool isSaved;
+  @override
+  @JsonKey()
+  final bool isPublic;
+  @override
+  @JsonKey()
+  final bool showName;
+  @override
+  @JsonKey()
+  final bool showRegion;
+  final List<XFile> _imageFiles;
+  @override
+  @JsonKey()
+  List<XFile> get imageFiles {
+    if (_imageFiles is EqualUnmodifiableListView) return _imageFiles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_imageFiles);
+  }
 
   @override
   String toString() {
-    return 'DiaryState(isLoading: $isLoading, userDiaries: $userDiaries, allDiaries: $allDiaries, followedUserDiaries: $followedUserDiaries, allDiariesWithUser: $allDiariesWithUser, errorMessage: $errorMessage, currentUser: $currentUser)';
+    return 'DiaryState(isLoading: $isLoading, userDiaries: $userDiaries, allDiaries: $allDiaries, followedUserDiaries: $followedUserDiaries, allDiariesWithUser: $allDiariesWithUser, errorMessage: $errorMessage, currentUser: $currentUser, isSaved: $isSaved, isPublic: $isPublic, showName: $showName, showRegion: $showRegion, imageFiles: $imageFiles)';
   }
 
   @override
@@ -272,7 +363,16 @@ class _$DiaryStateImpl implements _DiaryState {
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.currentUser, currentUser) ||
-                other.currentUser == currentUser));
+                other.currentUser == currentUser) &&
+            (identical(other.isSaved, isSaved) || other.isSaved == isSaved) &&
+            (identical(other.isPublic, isPublic) ||
+                other.isPublic == isPublic) &&
+            (identical(other.showName, showName) ||
+                other.showName == showName) &&
+            (identical(other.showRegion, showRegion) ||
+                other.showRegion == showRegion) &&
+            const DeepCollectionEquality()
+                .equals(other._imageFiles, _imageFiles));
   }
 
   @override
@@ -284,7 +384,12 @@ class _$DiaryStateImpl implements _DiaryState {
       const DeepCollectionEquality().hash(_followedUserDiaries),
       const DeepCollectionEquality().hash(_allDiariesWithUser),
       errorMessage,
-      currentUser);
+      currentUser,
+      isSaved,
+      isPublic,
+      showName,
+      showRegion,
+      const DeepCollectionEquality().hash(_imageFiles));
 
   @JsonKey(ignore: true)
   @override
@@ -301,7 +406,12 @@ abstract class _DiaryState implements DiaryState {
       final List<Diary> followedUserDiaries,
       final List<DiaryWithUser> allDiariesWithUser,
       final String? errorMessage,
-      final User? currentUser}) = _$DiaryStateImpl;
+      final User? currentUser,
+      final bool isSaved,
+      final bool isPublic,
+      final bool showName,
+      final bool showRegion,
+      final List<XFile> imageFiles}) = _$DiaryStateImpl;
 
   @override
   bool get isLoading;
@@ -317,6 +427,16 @@ abstract class _DiaryState implements DiaryState {
   String? get errorMessage;
   @override
   User? get currentUser;
+  @override
+  bool get isSaved;
+  @override
+  bool get isPublic;
+  @override
+  bool get showName;
+  @override
+  bool get showRegion;
+  @override
+  List<XFile> get imageFiles;
   @override
   @JsonKey(ignore: true)
   _$$DiaryStateImplCopyWith<_$DiaryStateImpl> get copyWith =>

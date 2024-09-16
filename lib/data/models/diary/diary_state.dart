@@ -3,6 +3,7 @@
 // When using Provider, DiaryState acts as a model for the ViewModel or a ChangeNotifier.
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'diary.dart';
 import '../user/user.dart';
@@ -20,5 +21,10 @@ class DiaryState with _$DiaryState {
     @Default([]) List<DiaryWithUser> allDiariesWithUser,
     String? errorMessage,
     User? currentUser,
+    @Default(false) bool isSaved,
+    @Default(false) bool isPublic,
+    @Default(false) bool showName,
+    @Default(false) bool showRegion,
+    @Default([]) List<XFile> imageFiles,
   }) = _DiaryState;
 }

@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:growing_tales/core/utils/logger.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/controllers/multi_style_text_editing_controller.dart';
 import '../../core/utils/dialog_utils.dart';
+import '../../core/utils/logger.dart';
 import '../../core/widgets/circular_back_button.dart';
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/custom_border_container.dart';
@@ -34,18 +33,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   // Variables for managing widget state
   int _currentPicture = 0;
   bool _showOnlyTop = true;
-
-  // Variables used for saving data to FireStore via diaryViewmodel.
-  bool _isPublic = false;
-  bool _showName = false;
-  bool _showRegion = false;
   final List<String> _selectedBooks = [];
-  final List<XFile> _imageFiles = [];
-  final List<String> _imagePaths = [];
-
-  // Note: The private variable _isSaved is used to prevent duplicate entries.
-  // Set this flag to true after a successful save
-  bool _isSaved = false;
 
   final CarouselSliderController _carouselSliderController =
       CarouselSliderController();
@@ -57,6 +45,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   @override
   void initState() {
     super.initState();
+    // _titleController.addListener(_resetSaveFlag);
+    // _contentController.addListener(_resetSaveFlag);
   }
 
   @override
@@ -72,78 +62,56 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
     });
   }
 
+  void _resetSaveFlag() {
+    Provider.of<DiaryViewModel>(context, listen: false).resetSaveFlag();
+  }
+
   Future<void> _pickImage() async {
     final images = await pickImages(context);
-
     if (images.isNotEmpty) {
-      setState(() {
-        _imageFiles.addAll(images);
-      });
+      Provider.of<DiaryViewModel>(context, listen: false).addImages(images);
     }
   }
 
   void _saveEntry() async {
-    //todo: Question: Provider.of(listen: false) 사용. save 버튼 누르면 viewModel 메서드 호출하고 페이지 이동할건데. 즉, UI 업데이트가 불필요한데, Consumer 사용을 고려할 필요가 잇을까?
     final diaryViewModel = Provider.of<DiaryViewModel>(context, listen: false);
 
     final settings = {
-      'publicOption': _isPublic,
-      'showName': _showName,
-      'showRegion': _showRegion,
+      'publicOption': diaryViewModel.state.isPublic,
+      'showName': diaryViewModel.state.showName,
+      'showRegion': diaryViewModel.state.showRegion,
     };
 
-    _imagePaths.clear();
-
     try {
-      // Note: image_picker: XFILE. <-> dart:io : File.
-      final uploadTasks = _imageFiles.map((imageFile) async {
-        File file = File(imageFile.path); // XFile -> File.
-        File compressedImage = await compressImage(file);
-        String imageUrl = await diaryViewModel.uploadImage(compressedImage);
-
-        return imageUrl;
-      }).toList();
-
-      _imagePaths.addAll(await Future.wait(uploadTasks));
-
-      final imagesToSave =
-          _imagePaths.isNotEmpty ? _imagePaths : ['assets/dummy1.png'];
-
-      bool success = await diaryViewModel.saveDiaryEntry(
-        imageFiles: imagesToSave,
+      diaryViewModel.saveEntry(
         title: _titleController.text,
         contents: _contentController.text,
         selectedBooks: _selectedBooks,
         settings: settings,
+        onSuccess: () {
+          showCustomDialog(
+            context: context,
+            title: 'Success',
+            content: 'Your diary entry has been saved successfully!',
+            onSettingsPressed: () async {
+              context.pop();
+              context.go('/statistics');
+            },
+            settingsButtonText: 'Ok',
+          );
+        },
+        onError: (errorMessage) {
+          showCustomDialog(
+            context: context,
+            title: 'Error',
+            content: errorMessage,
+            onSettingsPressed: () async {
+              context.pop();
+            },
+            settingsButtonText: 'Retry',
+          );
+        },
       );
-
-      if (success) {
-        setState(() {
-          // Note: Disable the save button after a successful save
-          _isSaved = true;
-        });
-
-        showCustomDialog(
-          context: context,
-          title: 'Success',
-          content: 'Your diary entry has been saved successfully!',
-          onSettingsPressed: () async {
-            context.pop();
-            context.go('/statistics');
-          },
-          settingsButtonText: 'Ok',
-        );
-      } else {
-        showCustomDialog(
-          context: context,
-          title: 'Login Required',
-          content: 'You must be logged in to create a diary entry.',
-          onSettingsPressed: () async {
-            context.pop();
-          },
-          settingsButtonText: 'Login',
-        );
-      }
     } catch (e) {
       Logger.error('Error saving diary entry: $e');
     }
@@ -151,6 +119,9 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final diaryViewModel = Provider.of<DiaryViewModel>(context);
+    final state = diaryViewModel.state;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Diary_Write'),
@@ -203,7 +174,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       ],
                     ),
                     SizedBox(height: 25.h),
-                    _imageFiles.isEmpty
+                    state.imageFiles.isEmpty
                         ? GestureDetector(
                             //todo 업로드 취소시 메세지 처리
                             onTap: _pickImage,
@@ -219,7 +190,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                         : Column(
                             children: [
                               CarouselSlider(
-                                items: _imageFiles.map((file) {
+                                items: state.imageFiles.map((file) {
                                   return Builder(
                                       builder: (BuildContext context) {
                                     return Container(
@@ -251,8 +222,10 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                               SizedBox(height: 25.h),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children:
-                                    _imageFiles.asMap().entries.map((entry) {
+                                children: state.imageFiles
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
                                   return GestureDetector(
                                     onTap: () {
                                       _carouselSliderController
@@ -384,11 +357,9 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       Row(
                         children: [
                           CustomCheckbox(
-                            isChecked: _isPublic,
+                            isChecked: state.isPublic,
                             onChanged: (bool newValue) {
-                              setState(() {
-                                _isPublic = newValue;
-                              });
+                              diaryViewModel.togglePublicOption(newValue);
                             },
                             checkColor: AppColors.followButtonColor,
                             uncheckedColor: Colors.white,
@@ -402,11 +373,9 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       Row(
                         children: [
                           CustomCheckbox(
-                            isChecked: _showName,
+                            isChecked: state.showName,
                             onChanged: (bool newValue) {
-                              setState(() {
-                                _showName = newValue;
-                              });
+                              diaryViewModel.toggleShowName(newValue);
                             },
                             checkColor: AppColors.followButtonColor,
                             uncheckedColor: Colors.white,
@@ -420,11 +389,9 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       Row(
                         children: [
                           CustomCheckbox(
-                            isChecked: _showRegion,
+                            isChecked: state.showRegion,
                             onChanged: (bool newValue) {
-                              setState(() {
-                                _showRegion = newValue;
-                              });
+                              diaryViewModel.toggleShowRegion(newValue);
                             },
                             checkColor: AppColors.followButtonColor,
                             uncheckedColor: Colors.white,
@@ -452,7 +419,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                           Expanded(
                             child: CustomButton(
                               onPressed: () {
-                                if (_isSaved) {
+                                if (state.isSaved) {
                                   showCustomDialog(
                                     context: context,
                                     title: 'Already Saved',
