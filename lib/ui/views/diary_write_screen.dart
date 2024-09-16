@@ -27,9 +27,6 @@ class DiaryWriteScreen extends StatefulWidget {
   State<DiaryWriteScreen> createState() => _DiaryWriteScreenState();
 }
 
-//todo flutter_image_compress, 이미지 변환, path_provider
-// 이미지 저장 시 google storage에 저장하고 이미지 경로만 firestore에 저장
-// 코드 평가
 // 이미지 커스텀 보더 설정.
 //todo 사용자가 TextField에 긴 글을 복사하면 overFollow 에러 발생.
 
@@ -37,8 +34,6 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   // Variables for managing widget state
   int _currentPicture = 0;
   bool _showOnlyTop = true;
-  final CarouselSliderController _carouselSliderController =
-      CarouselSliderController();
 
   // Variables used for saving data to FireStore via diaryViewmodel.
   bool _isPublic = false;
@@ -47,6 +42,13 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   final List<String> _selectedBooks = [];
   final List<XFile> _imageFiles = [];
   final List<String> _imagePaths = [];
+
+  // Note: The private variable _isSaved is used to prevent duplicate entries.
+  // Set this flag to true after a successful save
+  bool _isSaved = false;
+
+  final CarouselSliderController _carouselSliderController =
+      CarouselSliderController();
   final MultiStyleTextEditingController _titleController =
       MultiStyleTextEditingController();
   final MultiStyleTextEditingController _contentController =
@@ -116,6 +118,11 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
       );
 
       if (success) {
+        setState(() {
+          // Note: Disable the save button after a successful save
+          _isSaved = true;
+        });
+
         showCustomDialog(
           context: context,
           title: 'Success',
@@ -444,7 +451,22 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                           //todo 로딩 인디케이터.
                           Expanded(
                             child: CustomButton(
-                              onPressed: _saveEntry,
+                              onPressed: () {
+                                if (_isSaved) {
+                                  showCustomDialog(
+                                    context: context,
+                                    title: 'Already Saved',
+                                    content:
+                                        'This diary entry has already been saved.',
+                                    onSettingsPressed: () async {
+                                      context.go('/statistics');
+                                    },
+                                    settingsButtonText: 'Ok',
+                                  );
+                                } else {
+                                  _saveEntry();
+                                }
+                              },
                               title: 'Save',
                               backGroundColor: Colors.black,
                               textColor: Colors.white,

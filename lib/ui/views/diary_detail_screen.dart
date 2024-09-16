@@ -111,32 +111,47 @@ class DiaryDetailScreen extends StatelessWidget {
                   child: CarouselSlider.builder(
                     itemCount: diary.imageUrls.length,
                     itemBuilder: (context, index, realIndex) {
+                      final imageUrl = diary.imageUrls[index];
+
+                      bool isNetworkImage =
+                          Uri.tryParse(imageUrl)?.hasAbsolutePath ?? false;
+
                       return Column(
                         children: [
                           Expanded(
-                            child: Image.network(
-                              diary.imageUrls[index],
-                              fit: BoxFit.cover,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
+                            child: isNetworkImage
+                                ? Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                          'assets/big-image-2.png',
+                                          fit: BoxFit.cover);
+                                    },
+                                  )
+                                : Image.asset(
+                                    'assets/big-image-2.png',
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                         ],
                       );

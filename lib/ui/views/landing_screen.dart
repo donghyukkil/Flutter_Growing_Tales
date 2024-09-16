@@ -10,7 +10,7 @@ import '../../core/widgets/social_login_button.dart';
 import '../../core/widgets/circular_back_button.dart';
 import '../../ui/view_models/users_view_model.dart';
 
-//todo: 오버플로우에러 잡기.로그아웃버튼 줄변경 고치기, 플로팅버튼 add 이미지 추가, 커스템 추가박스, 드롭박스 아이콘추가(Books), 커스텀 버튼 추가.
+//todo: 오버플로우에러 잡기.로그아웃버튼 줄변경 고치기, 플로팅버튼 add 이미지 추가, 커스템 추가박스.
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -113,11 +113,11 @@ class LandingPage extends StatelessWidget {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Logged in successfully'),
-                                    duration: Duration(seconds: 2),
+                                    duration: Duration(seconds: 1),
                                   ),
                                 );
 
-                                await Future.delayed(Duration(seconds: 2));
+                                await Future.delayed(Duration(seconds: 1));
                                 // // context.go('/statistics');
 
                                 context.pop();
