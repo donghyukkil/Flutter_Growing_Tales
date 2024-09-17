@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:growing_tales/core/utils/dialog_utils.dart';
+import 'package:growing_tales/ui/view_models/diary_view_model.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/theme/custom_theme_extension.dart';
 import '../../core/widgets/custom_text.dart';
 import '../../core/widgets/user_info_tile.dart';
 import '../../data/models/diary/diary.dart';
+import '../../core/utils/menu_utils.dart';
 
 //todo 책 통계 테이블 추가.
 //todo 성능 최적화 (이미지 업로드 긴 시간이 걸림, textField 입력 부하 줄이기 (batching, caching, throttle, debounce 적용)
 //todo textField 사용자 복사 이벤트 적용이 잘 안됨. textField 부하 탓?
-// todo diary_write -> SAVE 버튼 시 사용자에게 알림. 여러번 입력 방지.
 
 class DiaryDetailScreen extends StatelessWidget {
   final Diary diary;
@@ -60,11 +64,51 @@ class DiaryDetailScreen extends StatelessWidget {
               child: Padding(
                 padding: Theme.of(context).paddingAll12,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(children: [Icon(Icons.heart_broken), Text('Like')]),
-                    Container(height: 24, width: 2, color: Colors.black),
-                    Row(children: [Icon(Icons.share_outlined), Text('Share')]),
+                    Expanded(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(children: [
+                          Icon(Icons.heart_broken),
+                          SizedBox(width: 5.w),
+                          Text('Like')
+                        ]),
+                        Row(children: [
+                          Icon(Icons.share_outlined),
+                          SizedBox(width: 5.w),
+                          Text('Share')
+                        ]),
+                      ],
+                    )),
+                    Expanded(
+                        child: Row(
+                      children: [
+                        SizedBox(width: 20.w),
+                        Container(height: 24, width: 2, color: Colors.black),
+                        SizedBox(width: 20.w),
+                        Expanded(
+                          child: GestureDetector(
+                            key: settingsKey,
+                            onTap: () {
+                              showSettingsMenu(
+                                context: context,
+                                settingsKey: settingsKey,
+                                menuItems: menuItems,
+                                onSelected: onSettingsSelected,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Icon(Icons.settings),
+                                SizedBox(width: 5.w),
+                                Text('Settings')
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
