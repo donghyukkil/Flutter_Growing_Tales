@@ -126,14 +126,20 @@ class DiaryViewModel extends ChangeNotifier {
     try {
       List<String> imagePaths = [];
 
-      final uploadTasks = _state.imageFiles.map((imageFile) async {
-        File file = File(imageFile.path);
-        File compressedImage = await compressImage(file);
+      for (var imageFile in _state.imageFiles) {
+        try {
+          File file = File(imageFile.path);
+          File compressedImage = await compressImage(file);
+          String imageUrl = await uploadImage(compressedImage);
+          imagePaths.add(imageUrl);
+        } catch (uploadError) {
+          Logger.error('Error uploading image: $uploadError');
+          onError('Failed to upload one or more images. Please try again.');
+          updateState(_state.copyWith(isLoading: false));
 
-        return await uploadImage(compressedImage);
-      }).toList();
-
-      imagePaths.addAll(await Future.wait(uploadTasks));
+          return;
+        }
+      }
 
       final imagesToSave =
           imagePaths.isNotEmpty ? imagePaths : ['assets/dummy1.png'];
