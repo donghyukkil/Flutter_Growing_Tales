@@ -59,6 +59,25 @@ class DiaryRepository {
     }
   }
 
+  Future<bool> deleteDiary(String diaryId) async {
+    try {
+      bool result = await _firestoreService.deleteDocument('diaries', diaryId);
+      if (result) {
+        Logger.info('Diary deleted successfully: $diaryId');
+
+        return true;
+      } else {
+        Logger.info('Failed to delete diary: $diaryId');
+
+        return false;
+      }
+    } catch (e, stackTrace) {
+      Logger.error('Error deleting diary with ID $diaryId: $e');
+
+      return false;
+    }
+  }
+
   Future<String> uploadImage(File imageFile) async {
     try {
       String filePath = 'images/${DateTime.now().millisecondsSinceEpoch}.jpg';

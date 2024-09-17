@@ -29,6 +29,52 @@ class DiaryDetailScreen extends StatelessWidget {
     String firstHalf = fullContext.substring(0, splitIndex);
     String secondHalf = fullContext.substring(splitIndex);
 
+    // Note: 	Accessing the Position of the “Settings” Row.
+    // This key allow yo to access widget position on the screen.
+    final GlobalKey settingsKey = GlobalKey();
+
+    final List<String> menuItems = [
+      'Update',
+      'Delete',
+    ];
+
+    void onSettingsSelected(String value) {
+      print('Settings item selected: $value'); // Trace menu selection
+      final diaryViewModel =
+          Provider.of<DiaryViewModel>(context, listen: false);
+
+      switch (value) {
+        case 'Update':
+          // diaryViewModel.updateDiary(diary);
+          break;
+        case 'Delete':
+          diaryViewModel.deleteDiary(diary).then((_) {
+            showCustomDialog(
+              context: context,
+              title: 'Delete',
+              content: 'Diary deleted successfully.',
+              onSettingsPressed: () async {
+                context.pop();
+              },
+              settingsButtonText: 'OK',
+            );
+          }).catchError((error) {
+            showCustomDialog(
+              context: context,
+              title: 'Error',
+              content: 'Failed to delete diary.',
+              onSettingsPressed: () async {
+                context.pop();
+              },
+              settingsButtonText: 'Retry',
+            );
+          });
+          break;
+        default:
+          print('Unknown action');
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Diary_detail'),

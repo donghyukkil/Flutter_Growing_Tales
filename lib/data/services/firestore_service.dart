@@ -25,4 +25,16 @@ class FirestoreService {
   CollectionReference getCollection(String path) {
     return _firestore.collection(path);
   }
+
+  Future<bool> deleteDocument(String collectionPath, String documentId) async {
+    try {
+      await _firestore.collection(collectionPath).doc(documentId).delete();
+
+      return true;
+    } catch (e, stackTrace) {
+      print('Error deleting document with ID $documentId: $e');
+
+      return false;
+    }
+  }
 }
