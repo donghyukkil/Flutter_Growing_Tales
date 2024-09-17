@@ -115,17 +115,20 @@ class StatisticsScreen extends StatelessWidget {
                       context.read<UsersViewModel>().currentUser?.id ?? '';
                   final currentUser = diaryViewModel.state.currentUser;
                   final diaries = diaryViewModel.state.userDiaries;
+                  final isLoading = diaryViewModel.state.isLoading;
+                  final hasFetchedDiaries = diaryViewModel.hasFetchedDiaries;
 
-                  // to delay state changes until after the current frame is build;
                   if (userId.isNotEmpty &&
-                      diaryViewModel.state.userDiaries.isEmpty) {
+                      diaries.isEmpty &&
+                      !isLoading &&
+                      !hasFetchedDiaries) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      diaryViewModel.fetchDiariesByUserId(userId);
+                      diaryViewModel.fetchDiariesIfNeeded(userId);
                     });
                   }
 
                   if (diaries.isEmpty) {
-                    return Center(child: Text('No Diareis Found'));
+                    return Center(child: Text('No Diary Found'));
                   }
 
                   return CarouselSlider.builder(

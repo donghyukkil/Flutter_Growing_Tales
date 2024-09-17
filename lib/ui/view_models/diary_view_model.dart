@@ -15,6 +15,7 @@ import '../../core/utils/image_utils.dart';
 class DiaryViewModel extends ChangeNotifier {
   DiaryRepository _diaryRepository;
   UsersViewModel _usersViewModel;
+
   DiaryState _state = DiaryState();
 
   DiaryViewModel({
@@ -24,14 +25,44 @@ class DiaryViewModel extends ChangeNotifier {
         _usersViewModel = usersViewModel;
 
   DiaryState get state => _state;
+  bool get hasFetchedDiaries => _hasFetchedDiaries;
 
-  // 1. for Statistics_screen Diary_Section.
+  bool _hasFetchedDiaries = false;
 
+  // Note: 1. for common use method.
+
+  void updateState(DiaryState newState) {
+    Logger.info('Updating state');
+    _state = newState;
+    notifyListeners();
+  }
+
+  void resetState() {
+    Logger.info('Resetting state');
+    _hasFetchedDiaries = false;
+    updateState(DiaryState());
+  }
+
+  // ChangeNotifierProxyProvider for Dependency Injection.
+  void updateDependencies(
+    DiaryRepository diaryRepository,
+    UsersViewModel usersViewModel,
+  ) {
+    Logger.info('Updating dependencies');
+    _diaryRepository = diaryRepository;
+    _usersViewModel = usersViewModel;
+    notifyListeners();
+  }
+
+  // 2. for Statistics_screen actions.
   void fetchDiariesIfNeeded(String userId) {
     Logger.info('fetchDiariesIfNeeded called with userId: $userId');
-    if (userId.isEmpty || _state.userDiaries.isNotEmpty) {
+
+    if (userId.isEmpty || _state.userDiaries.isNotEmpty || _hasFetchedDiaries) {
       Logger.info(
-          'No fetch required, userId is empty or diaries already loaded.');
+        'Skipping fetch: User ID is empty, diaries already loaded, already fetching, or fetch completed.',
+      );
+
       return;
     }
 
@@ -51,6 +82,8 @@ class DiaryViewModel extends ChangeNotifier {
         currentUser: currentUser,
         isLoading: false,
       ));
+
+      _hasFetchedDiaries = true;
       Logger.info('Successfully fetched diaries for userId: $userId');
     } catch (e) {
       updateState(_state.copyWith(
@@ -61,7 +94,107 @@ class DiaryViewModel extends ChangeNotifier {
     }
   }
 
-  // for Community_screen User_Diary_tile section
+  // for CRUD Diary_screen.
+  Future<void> saveEntry({
+    required String title,
+    required String contents,
+    required List<String> selectedBooks,
+    required Map<String, bool> settings,
+    required Function onSuccess,
+    required Function(String) onError,
+  }) async {
+    Logger.info('Attempting to save entry with title: $title');
+
+    if (_state.isSaved) {
+      Logger.info('Entry has already been saved');
+      onError('This entry has already been saved.');
+
+      return;
+    }
+
+    final currentUser = _usersViewModel.currentUser;
+
+    if (currentUser == null || currentUser.id.isEmpty) {
+      onError('You must be logged in to create a diary entry.');
+      updateState(_state.copyWith(isLoading: false));
+
+      return;
+    }
+
+    updateState(_state.copyWith(isLoading: true));
+
+    try {
+      List<String> imagePaths = [];
+
+      final uploadTasks = _state.imageFiles.map((imageFile) async {
+        File file = File(imageFile.path);
+        File compressedImage = await compressImage(file);
+
+        return await uploadImage(compressedImage);
+      }).toList();
+
+      imagePaths.addAll(await Future.wait(uploadTasks));
+
+      final imagesToSave =
+          imagePaths.isNotEmpty ? imagePaths : ['assets/dummy1.png'];
+
+      Diary newDiary = Diary(
+        id: '',
+        userId: currentUser.id,
+        title: title,
+        content: contents,
+        imageUrls: imagesToSave,
+        selectedBooks: selectedBooks,
+        settings: settings,
+        createdAt: DateTime.now(),
+      );
+
+      await _diaryRepository.addDiary(newDiary);
+      await fetchDiariesByUserId(newDiary.userId);
+
+      updateState(_state.copyWith(isSaved: true, isLoading: false));
+      Logger.info('Successfully saved entry with title: $title');
+      onSuccess();
+    } catch (e) {
+      updateState(_state.copyWith(isLoading: false));
+      Logger.error('Failed to save diary entry: $e');
+      onError('Failed to save diary entry');
+    }
+  }
+
+  // Note: to switch local state in Statistics screen.
+  void togglePublicOption(bool value) {
+    Logger.info('Toggling public option to $value');
+    updateState(_state.copyWith(isPublic: value));
+  }
+
+  void toggleShowName(bool value) {
+    Logger.info('Toggling show name to $value');
+    updateState(_state.copyWith(showName: value));
+  }
+
+  void toggleShowRegion(bool value) {
+    Logger.info('Toggling show region to $value');
+    updateState(_state.copyWith(showRegion: value));
+  }
+
+  void resetSaveFlag() {
+    Logger.info('Resetting save flag');
+    updateState(_state.copyWith(isSaved: false));
+  }
+
+  void addImages(List<XFile> images) {
+    Logger.info('Adding images: ${images.length} files');
+    updateState(_state.copyWith(imageFiles: [...state.imageFiles, ...images]));
+  }
+
+  Future<String> uploadImage(File imageFile) async {
+    Logger.info('Uploading image: ${imageFile.path}');
+
+    return await _diaryRepository.uploadImage(imageFile);
+  }
+
+  // 3. for Community_screen User_Diary_tile section
   Future<void> fetchAllDiaries() async {
     Logger.info('Fetching all diaries');
     updateState(_state.copyWith(isLoading: true));
@@ -114,126 +247,5 @@ class DiaryViewModel extends ChangeNotifier {
           _state.copyWith(errorMessage: e.toString(), isLoading: false));
       Logger.error('Failed to fetch all diaries - Error: $e');
     }
-  }
-
-  // for CRUD Diary_screen.
-
-  Future<void> saveEntry({
-    required String title,
-    required String contents,
-    required List<String> selectedBooks,
-    required Map<String, bool> settings,
-    required Function onSuccess,
-    required Function(String) onError,
-  }) async {
-    Logger.info('Attempting to save entry with title: $title');
-    if (_state.isSaved) {
-      Logger.info('Entry has already been saved');
-      onError('This entry has already been saved.');
-
-      return;
-    }
-
-    updateState(_state.copyWith(isLoading: true));
-
-    try {
-      final currentUser = _usersViewModel.currentUser;
-
-      if (currentUser == null || currentUser.id.isEmpty) {
-        onError('You must be logged in to create a diary entry.');
-        updateState(_state.copyWith(isLoading: false));
-
-        return;
-      }
-
-      List<String> imagePaths = [];
-
-      final uploadTasks = _state.imageFiles.map((imageFile) async {
-        File file = File(imageFile.path);
-        File compressedImage = await compressImage(file);
-
-        return await uploadImage(compressedImage);
-      }).toList();
-
-      imagePaths.addAll(await Future.wait(uploadTasks));
-
-      final imagesToSave =
-          imagePaths.isNotEmpty ? imagePaths : ['assets/dummpy1.png'];
-
-      Diary newDiary = Diary(
-        id: '',
-        userId: currentUser.id,
-        title: title,
-        content: contents,
-        imageUrls: imagesToSave,
-        selectedBooks: selectedBooks,
-        settings: settings,
-        createdAt: DateTime.now(),
-      );
-
-      await _diaryRepository.addDiary(newDiary);
-      await fetchDiariesByUserId(newDiary.userId);
-
-      updateState(_state.copyWith(isSaved: true, isLoading: false));
-      Logger.info('Successfully saved entry with title: $title');
-      onSuccess();
-    } catch (e) {
-      updateState(_state.copyWith(isLoading: false));
-      Logger.error('Failed to save diary entry: $e');
-      onError('Failed to save diary entry');
-    }
-  }
-
-  void updateState(DiaryState newState) {
-    Logger.info('Updating state');
-    _state = newState;
-    notifyListeners();
-  }
-
-  void togglePublicOption(bool value) {
-    Logger.info('Toggling public option to $value');
-    updateState(_state.copyWith(isPublic: value));
-  }
-
-  void toggleShowName(bool value) {
-    Logger.info('Toggling show name to $value');
-    updateState(_state.copyWith(showName: value));
-  }
-
-  void toggleShowRegion(bool value) {
-    Logger.info('Toggling show region to $value');
-    updateState(_state.copyWith(showRegion: value));
-  }
-
-  void resetSaveFlag() {
-    Logger.info('Resetting save flag');
-    updateState(_state.copyWith(isSaved: false));
-  }
-
-  void addImages(List<XFile> images) {
-    Logger.info('Adding images: ${images.length} files');
-    updateState(_state.copyWith(imageFiles: [...state.imageFiles, ...images]));
-  }
-
-  Future<String> uploadImage(File imageFile) async {
-    Logger.info('Uploading image: ${imageFile.path}');
-
-    return await _diaryRepository.uploadImage(imageFile);
-  }
-
-  void resetState() {
-    Logger.info('Resetting state');
-    updateState(DiaryState());
-  }
-
-  // ChangeNotifierProxyProvider for Dependency Injection.
-  void updateDependencies(
-    DiaryRepository diaryRepository,
-    UsersViewModel usersViewModel,
-  ) {
-    Logger.info('Updating dependencies');
-    _diaryRepository = diaryRepository;
-    _usersViewModel = usersViewModel;
-    notifyListeners();
   }
 }
