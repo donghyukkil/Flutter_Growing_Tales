@@ -168,6 +168,22 @@ class DiaryViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteDiary(Diary diary) async {
+    try {
+      Logger.info('Deleting diary with ID: ${diary.id}');
+      updateState(_state.copyWith(isLoading: true));
+
+      await _diaryRepository.deleteDiary(diary.id);
+      await fetchDiariesByUserId(diary.userId);
+
+      Logger.info('Diary deleted successfully');
+    } catch (error) {
+      updateState(_state.copyWith(isLoading: false));
+      Logger.error('Failed to delete diary: $error');
+      throw error;
+    }
+  }
+
   // Note: to switch local state in Statistics screen.
   void togglePublicOption(bool value) {
     Logger.info('Toggling public option to $value');

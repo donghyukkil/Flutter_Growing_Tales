@@ -48,27 +48,35 @@ class DiaryDetailScreen extends StatelessWidget {
           // diaryViewModel.updateDiary(diary);
           break;
         case 'Delete':
-          diaryViewModel.deleteDiary(diary).then((_) {
-            showCustomDialog(
-              context: context,
-              title: 'Delete',
-              content: 'Diary deleted successfully.',
-              onSettingsPressed: () async {
-                context.pop();
-              },
-              settingsButtonText: 'OK',
-            );
-          }).catchError((error) {
-            showCustomDialog(
-              context: context,
-              title: 'Error',
-              content: 'Failed to delete diary.',
-              onSettingsPressed: () async {
-                context.pop();
-              },
-              settingsButtonText: 'Retry',
-            );
-          });
+          showCustomDialog(
+            context: context,
+            title: 'Delete Diary',
+            content: 'Are you sure you want to delete this diary?',
+            onSettingsPressed: () async {
+              diaryViewModel.deleteDiary(diary).then((_) {
+                showCustomDialog(
+                  context: context,
+                  title: 'Delete',
+                  content: 'Diary deleted successfully.',
+                  onSettingsPressed: () async {
+                    context.go('/statistics');
+                  },
+                  settingsButtonText: 'OK',
+                );
+              }).catchError((error) {
+                showCustomDialog(
+                  context: context,
+                  title: 'Error',
+                  content: 'Failed to delete diary.',
+                  onSettingsPressed: () async {
+                    context.pop();
+                  },
+                  settingsButtonText: 'Retry',
+                );
+              });
+            },
+            settingsButtonText: 'OK',
+          );
           break;
         default:
           print('Unknown action');
