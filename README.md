@@ -2,7 +2,7 @@
 
 ## 프로젝트 설명
 
-책 육아에 관심이 많은 부몰를 위한 일기장/소셜 네트워크 플랫폼 모바일 애플리케이션입니다.
+자녀의 책 육아에 관심이 많은 부모를 위한 일기장/소셜 네트워크 플랫폼 모바일 애플리케이션입니다.
 
 - DIARY(일기) CRUD
 - HeatMap 형식으로 달력에 요일별 일기 통계 (Statistics Screen)
@@ -25,7 +25,7 @@
 2. 디렉토리로 이동
 
     ```bash
-    cd donghyukkil-acote
+    cd Flutter_Growing_Tales
      ```
 
 3. **필요한 Flutter 종속성 설치**:
