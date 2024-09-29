@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -45,8 +46,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   @override
   void initState() {
     super.initState();
-    // _titleController.addListener(_resetSaveFlag);
-    // _contentController.addListener(_resetSaveFlag);
+    _titleController.addListener(_resetSaveFlag);
+    _contentController.addListener(_resetSaveFlag);
   }
 
   @override
@@ -67,7 +68,10 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   }
 
   Future<void> _pickImage() async {
+    Provider.of<DiaryViewModel>(context, listen: false).clearImages();
+
     final images = await pickImages(context);
+
     if (images.isNotEmpty) {
       Provider.of<DiaryViewModel>(context, listen: false).addImages(images);
     }
@@ -94,7 +98,6 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
             title: 'Success',
             content: 'Your diary entry has been saved successfully!',
             onSettingsPressed: () async {
-              context.pop();
               context.go('/statistics');
             },
             settingsButtonText: 'Ok',
@@ -130,9 +133,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
           child: CircularBackButton(
               iconSize: 20,
               onPressed: () {
-                //todo context.pop()하면 There is nothing to pop 에러. -> 이전 화면에서 go 방식에서 push 방식으로 변경.
-                context.pop();
-                // context.pop('value');
+                diaryViewModel.resetState();
+                context.go('/statistics');
               }),
         ),
       ),
@@ -143,7 +145,6 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
             CustomBorderContainer(
               width: double.infinity,
               height: 300.h,
-              // backgroundColor: AppColors.followButtonColor,
               backgroundColor: Colors.white,
               borderColor: Colors.black,
               borderWidth: 1,
@@ -256,7 +257,6 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
             CustomBorderContainer(
               width: double.infinity,
               height: 350.h,
-              // backgroundColor: AppColors.growingTalesPink,
               backgroundColor: Colors.white,
               borderWidth: 1,
               borderColor: Colors.black,
@@ -283,9 +283,11 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       ],
                     ),
                     Expanded(
-                        child: CustomStyledTextField(
-                      titleController: _titleController,
-                      contentController: _contentController,
+                        child: SingleChildScrollView(
+                      child: CustomStyledTextField(
+                        titleController: _titleController,
+                        contentController: _contentController,
+                      ),
                     )),
                   ],
                 ),
@@ -405,15 +407,6 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: CustomButton(
-                              onPressed: () {},
-                              title: 'Delete',
-                              backGroundColor: Colors.white,
-                              textColor: Colors.black,
-                            ),
-                          ),
-                          SizedBox(width: 30.w),
                           //todo save 버튼 한번 만다르게 수정.
                           //todo 로딩 인디케이터.
                           Expanded(
@@ -426,12 +419,14 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                                     content:
                                         'This diary entry has already been saved.',
                                     onSettingsPressed: () async {
+                                      diaryViewModel.resetState();
                                       context.go('/statistics');
                                     },
                                     settingsButtonText: 'Ok',
                                   );
                                 } else {
                                   _saveEntry();
+                                  diaryViewModel.resetState();
                                 }
                               },
                               title: 'Save',

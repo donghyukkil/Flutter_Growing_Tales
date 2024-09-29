@@ -118,9 +118,7 @@ class LandingPage extends StatelessWidget {
                                 );
 
                                 await Future.delayed(Duration(seconds: 1));
-                                // // context.go('/statistics');
-
-                                context.pop();
+                                context.go('/statistics');
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(

@@ -37,8 +37,7 @@ class StatisticsScreen extends StatelessWidget {
                     buttonText: user == null ? 'Login' : 'Logout',
                     onButtonPressed: () {
                       if (user == null) {
-                        // context.go('/landing');
-                        context.push('/landing');
+                        context.go('/landing');
                       } else {
                         userViewModel.logout(context);
 
@@ -178,8 +177,7 @@ class StatisticsScreen extends StatelessWidget {
         backgroundColor: AppColors.followButtonColor,
         child: Icon(Icons.add),
         onPressed: () {
-          // context.go('/diary/write');
-          context.push('/diary/write');
+          context.go('/diary/write');
         },
       ),
     );

@@ -210,6 +210,11 @@ class DiaryViewModel extends ChangeNotifier {
     updateState(_state.copyWith(imageFiles: [...state.imageFiles, ...images]));
   }
 
+  void clearImages() {
+    Logger.info('Clearing images');
+    updateState(_state.copyWith(imageFiles: []));
+  }
+
   Future<String> uploadImage(File imageFile) async {
     Logger.info('Uploading image: ${imageFile.path}');
 
