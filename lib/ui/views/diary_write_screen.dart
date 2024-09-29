@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,6 +36,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   int _currentPicture = 0;
   bool _showOnlyTop = true;
   final List<String> _selectedBooks = [];
+  Timer? _debounce;
 
   final CarouselSliderController _carouselSliderController =
       CarouselSliderController();
@@ -54,7 +56,16 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   void dispose() {
     _titleController.dispose();
     _contentController.dispose();
+    _debounce?.cancel();
     super.dispose();
+  }
+
+  void _onSavePressed() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+
+    _debounce = Timer(const Duration(seconds: 2), () {
+      _saveEntry();
+    });
   }
 
   void _toggleTopView() {
@@ -102,6 +113,8 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
             },
             settingsButtonText: 'Ok',
           );
+
+          diaryViewModel.resetState();
         },
         onError: (errorMessage) {
           showCustomDialog(
@@ -425,8 +438,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                                     settingsButtonText: 'Ok',
                                   );
                                 } else {
-                                  _saveEntry();
-                                  diaryViewModel.resetState();
+                                  _onSavePressed();
                                 }
                               },
                               title: 'Save',
