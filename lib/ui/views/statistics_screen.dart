@@ -52,7 +52,7 @@ class StatisticsScreen extends StatelessWidget {
             ),
             //todo 사용자 찾기 아이콘 구현하기
             TableCalendar(
-              rowHeight: 42.h,
+              rowHeight: 45.h,
               focusedDay: DateTime.now(),
               firstDay: DateTime.now().subtract(
                 Duration(
@@ -104,7 +104,7 @@ class StatisticsScreen extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: 5.h),
             Consumer<DiaryViewModel>(
               builder: (context, diaryViewModel, child) {
                 final userId =
@@ -124,7 +124,7 @@ class StatisticsScreen extends StatelessWidget {
                 }
 
                 if (diaries.isEmpty) {
-                  return Center(child: Text('No Diary Found'));
+                  return Expanded(child: Center(child: Text('No Diary Found')));
                 }
 
                 return CarouselSlider.builder(
@@ -150,7 +150,7 @@ class StatisticsScreen extends StatelessWidget {
                     );
                   },
                   options: CarouselOptions(
-                    height: 200.h,
+                    height: 205.h,
                     // enlargeCenterPage: true,
                     autoPlay: true,
                     aspectRatio: 16 / 9,

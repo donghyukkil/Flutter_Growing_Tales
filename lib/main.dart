@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -11,6 +12,7 @@ import 'core/router/app_router.dart';
 import 'providers/providers.dart';
 
 void main() async {
+  await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
 
   Logger.info('Initializing Firebase...');

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/config/google_books_api_config.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/exception/exceptions.dart';
@@ -106,7 +107,7 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
 
       setState(() {
         booksResult.addAll(books);
-        _hasMoreData = books.length == BookService.maxResults;
+        _hasMoreData = books.length == googleBooksMaxResults;
         _currentStartIndex += books.length;
       });
     } on BannedKeywordException catch (e) {
