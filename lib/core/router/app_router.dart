@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:growing_tales/ui/views/books/book_search_screen.dart';
 
 import '../../data/models/diary/diary_with_user.dart';
 import '../../ui/views/community_screen.dart';
@@ -10,6 +9,7 @@ import '../../ui/views/profile_screen.dart';
 import '../../ui/views/statistics_screen.dart';
 import '../../ui/views/diary/diary_detail_screen.dart';
 import '../../ui/views/diary/diary_write_screen.dart';
+import '../../ui/views/book/book_search_screen.dart';
 
 import '../../data/models/diary/diary.dart';
 

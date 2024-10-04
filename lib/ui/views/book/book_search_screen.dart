@@ -192,8 +192,7 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
             Expanded(
               child: booksResult.isEmpty && userInput.isEmpty
                   ? Center(
-                      child:
-                          Text('Search for books you’ve read to your child.'),
+                      child: Text('Search for book you’ve read to your child.'),
                     )
                   : Scrollbar(
                       controller: _scrollController,

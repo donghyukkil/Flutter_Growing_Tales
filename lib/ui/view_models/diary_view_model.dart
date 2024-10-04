@@ -38,7 +38,7 @@ class DiaryViewModel extends ChangeNotifier {
   }
 
   void resetState() {
-    Logger.info('Resetting state');
+    Logger.info('Caution: ----------Resetting state--------------');
     _hasFetchedDiaries = false;
     updateState(DiaryState());
   }

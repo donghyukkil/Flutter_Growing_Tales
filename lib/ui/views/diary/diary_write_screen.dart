@@ -7,19 +7,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/constants/app_colors.dart';
-import '../../core/controllers/multi_style_text_editing_controller.dart';
-import '../../core/utils/dialog_utils.dart';
-import '../../core/utils/logger.dart';
-import '../../core/widgets/circular_back_button.dart';
-import '../../core/theme/custom_theme_extension.dart';
-import '../../core/widgets/custom_border_container.dart';
-import '../../core/widgets/custom_styled_text_field.dart';
-import '../../core/widgets/custom_button.dart';
-import '../../core/widgets/custom_checkbox.dart';
-import '../../core/utils/image_utils.dart';
-import '../../ui/components/book_list_section.dart';
-import '../../ui/view_models/diary_view_model.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/controllers/multi_style_text_editing_controller.dart';
+import '../../../core/utils/dialog_utils.dart';
+import '../../../core/utils/logger.dart';
+import '../../../core/widgets/circular_back_button.dart';
+import '../../../core/theme/custom_theme_extension.dart';
+import '../../../core/widgets/custom_border_container.dart';
+import '../../../core/widgets/custom_styled_text_field.dart';
+import '../../../core/widgets/custom_button.dart';
+import '../../../core/widgets/custom_checkbox.dart';
+import '../../../core/utils/image_utils.dart';
+import '../../../ui/components/book_list_section.dart';
+import '../../../ui/view_models/diary_view_model.dart';
 
 class DiaryWriteScreen extends StatefulWidget {
   const DiaryWriteScreen({super.key});
@@ -29,7 +29,6 @@ class DiaryWriteScreen extends StatefulWidget {
 }
 
 // 이미지 커스텀 보더 설정.
-//todo 사용자가 TextField에 긴 글을 복사하면 overFollow 에러 발생.
 
 class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
   // Variables for managing widget state
@@ -109,12 +108,11 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
             title: 'Success',
             content: 'Your diary entry has been saved successfully!',
             onSettingsPressed: () async {
+              diaryViewModel.resetState();
               context.go('/statistics');
             },
             settingsButtonText: 'Ok',
           );
-
-          diaryViewModel.resetState();
         },
         onError: (errorMessage) {
           showCustomDialog(
@@ -122,9 +120,10 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
             title: 'Error',
             content: errorMessage,
             onSettingsPressed: () async {
-              context.pop();
+              diaryViewModel.resetState();
+              context.go('/statistics');
             },
-            settingsButtonText: 'Retry',
+            settingsButtonText: '확인',
           );
         },
       );
@@ -424,23 +423,7 @@ class _DiaryWriteScreenState extends State<DiaryWriteScreen> {
                           //todo 로딩 인디케이터.
                           Expanded(
                             child: CustomButton(
-                              onPressed: () {
-                                if (state.isSaved) {
-                                  showCustomDialog(
-                                    context: context,
-                                    title: 'Already Saved',
-                                    content:
-                                        'This diary entry has already been saved.',
-                                    onSettingsPressed: () async {
-                                      diaryViewModel.resetState();
-                                      context.go('/statistics');
-                                    },
-                                    settingsButtonText: 'Ok',
-                                  );
-                                } else {
-                                  _onSavePressed();
-                                }
-                              },
+                              onPressed: _onSavePressed,
                               title: 'Save',
                               backGroundColor: Colors.black,
                               textColor: Colors.white,
