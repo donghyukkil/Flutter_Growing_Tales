@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/utils/text_helpers.dart';
+import 'text_helpers.dart';
 
 class MultiStyleTextEditingController extends TextEditingController {
   @override

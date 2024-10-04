@@ -3,15 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:growing_tales/data/repositories/book_repository.dart';
 
 import '../../../core/config/google_books_api_config.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/exception/exceptions.dart';
-import '../../../data/services/book_service.dart';
+import '../../../data/models/book/book.dart';
 import '../../../core/widgets/circular_back_button.dart';
 import '../../../core/widgets/custom_text.dart';
-import '../../../core/controllers/multi_style_text_editing_controller.dart';
+import '../../../core/utils/multi_style_text_editing_controller.dart';
+import '../../../data/repositories/book_repository.dart';
 
 //todo :add 버튼 아이템 local state로 관리 -> viewmodel book State에 넘기기
 
@@ -26,10 +28,10 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
   final MultiStyleTextEditingController _textController =
       MultiStyleTextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final BookService _bookService = BookService();
+  final BookRepository _bookRepository = BookRepository();
 
   String userInput = '';
-  List<dynamic> booksResult = [];
+  List<Book> booksResult = [];
   bool _isLoading = false;
   bool _hasMoreData = true;
   int _currentStartIndex = 0;
@@ -102,7 +104,7 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
     });
 
     try {
-      final books = await _bookService.fetchBooks(userInput,
+      final books = await _bookRepository.getBooks(userInput,
           startIndex: _currentStartIndex);
 
       setState(() {
@@ -213,7 +215,7 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
                                 );
                               }
 
-                              final item = booksResult[index]['volumeInfo'];
+                              final book = booksResult[index];
 
                               return Column(
                                 children: [
@@ -233,14 +235,12 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(5),
-                                            image: item['imageLinks'] != null &&
-                                                    item['imageLinks']
-                                                            ['thumbnail'] !=
-                                                        null
+                                            image: (book.thumbnailUrl != null &&
+                                                    book.thumbnailUrl!
+                                                        .isNotEmpty)
                                                 ? DecorationImage(
                                                     image: NetworkImage(
-                                                        item['imageLinks']
-                                                            ['thumbnail']),
+                                                        book.thumbnailUrl!),
                                                     fit: BoxFit.fill,
                                                   )
                                                 : DecorationImage(
@@ -260,14 +260,12 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
                                             children: [
                                               CustomText(
                                                 maxLines: 1,
-                                                text: '${item['title']}',
+                                                text: book.title,
                                               ),
+                                              CustomText(text: book.author),
                                               CustomText(
-                                                  text:
-                                                      '${item['authors'] != null ? item['authors'].join(', ') : 'Unknown Author'}'),
-                                              CustomText(
-                                                text: item['pageCount'] != null
-                                                    ? '${item['pageCount']} pages'
+                                                text: book.pageCount != null
+                                                    ? '${book.pageCount} pages'
                                                     : '',
                                               ),
                                               Row(
@@ -277,7 +275,7 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
                                                 children: [
                                                   CustomText(
                                                     text:
-                                                        'Year: ${item['publishedDate'].toString().substring(0, 4)}',
+                                                        'Year: ${book.publishedDate?.substring(0, 4) ?? 'Unknown'}',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodySmall,

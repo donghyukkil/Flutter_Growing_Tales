@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growing_tales/core/constants/app_colors.dart';
 
-import '../../core/controllers/multi_style_text_editing_controller.dart';
+import '../utils/multi_style_text_editing_controller.dart';
 
 class CustomStyledTextField extends StatefulWidget {
   final MultiStyleTextEditingController titleController;

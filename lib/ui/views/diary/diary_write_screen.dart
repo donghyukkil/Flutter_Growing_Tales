@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_colors.dart';
-import '../../../core/controllers/multi_style_text_editing_controller.dart';
+import '../../../core/utils/multi_style_text_editing_controller.dart';
 import '../../../core/utils/dialog_utils.dart';
 import '../../../core/utils/logger.dart';
 import '../../../core/widgets/circular_back_button.dart';
