@@ -88,16 +88,21 @@ class CommunityScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final diaryWithUser = diariesWithUser[index];
 
-                          return UserDiaryTile(
-                            imageUrl: diaryWithUser.diary.imageUrls.isNotEmpty
-                                ? diaryWithUser.diary.imageUrls.first
-                                : '',
-                            name: diaryWithUser.userName,
-                            region: diaryWithUser.userRegion,
-                            diaryContent: diaryWithUser.diary.content,
-                            onFollowPressed: () {
-                              Logger.info('Follow button pressed');
+                          return GestureDetector(
+                            onTap: () {
+                              context.go('/diary_detail', extra: diaryWithUser);
                             },
+                            child: UserDiaryTile(
+                              imageUrl: diaryWithUser.diary.imageUrls.isNotEmpty
+                                  ? diaryWithUser.diary.imageUrls.first
+                                  : '',
+                              name: diaryWithUser.userName,
+                              region: diaryWithUser.userRegion,
+                              diaryContent: diaryWithUser.diary.content,
+                              onFollowPressed: () {
+                                Logger.info('Follow button pressed');
+                              },
+                            ),
                           );
                         },
                       );

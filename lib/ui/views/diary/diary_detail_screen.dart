@@ -6,23 +6,38 @@ import 'package:growing_tales/core/utils/dialog_utils.dart';
 import 'package:growing_tales/ui/view_models/diary_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/theme/custom_theme_extension.dart';
-import '../../core/widgets/custom_text.dart';
-import '../../core/widgets/user_info_tile.dart';
-import '../../data/models/diary/diary.dart';
-import '../../core/utils/menu_utils.dart';
+import '../../../core/theme/custom_theme_extension.dart';
+import '../../../core/widgets/custom_text.dart';
+import '../../../core/widgets/user_info_tile.dart';
+import '../../../data/models/diary/diary.dart';
+import '../../../core/utils/menu_utils.dart';
+import '../../../data/models/diary/diary_with_user.dart';
 
 //todo 책 통계 테이블 추가.
 //todo 성능 최적화 (이미지 업로드 긴 시간이 걸림, textField 입력 부하 줄이기 (batching, caching, throttle, debounce 적용)
 //todo textField 사용자 복사 이벤트 적용이 잘 안됨. textField 부하 탓?
 
 class DiaryDetailScreen extends StatelessWidget {
-  final Diary diary;
+  final dynamic diaryObject;
 
-  const DiaryDetailScreen({super.key, required this.diary});
+  const DiaryDetailScreen({super.key, this.diaryObject});
 
   @override
   Widget build(BuildContext context) {
+    Diary diary;
+
+    if (diaryObject is DiaryWithUser) {
+      diary = diaryObject.diary;
+    } else if (diaryObject is Diary) {
+      diary = diaryObject;
+    } else {
+      return Scaffold(
+        body: Center(
+          child: Text('Invalid diary data'),
+        ),
+      );
+    }
+
     //todo 텍스트가 첫번째 컨테이거를 채우지 못하면 전부 firstHalf에 렌더링하기.
     String fullContext = diary.content;
     int splitIndex = (fullContext.length / 2).round();
