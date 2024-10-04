@@ -1,8 +1,7 @@
 // Note: This method fetches books from the Google Books API by making a request through the BookService
 // and then formats the raw response data into a list of Book Object.
 
-import '../../data/models/book/book.dart';
-import '../../data/services/book_service.dart';
+import 'package:growing_tales/core/exception/exceptions.dart';
 
 import '../../data/models/book/book.dart';
 import '../../data/services/book_service.dart';
@@ -31,6 +30,8 @@ class BookRepository {
       }).toList();
 
       return books;
+    } on BannedKeywordException catch (e) {
+      throw BannedKeywordException(e.message);
     } catch (e) {
       throw Exception('Failed to load books: $e');
     }

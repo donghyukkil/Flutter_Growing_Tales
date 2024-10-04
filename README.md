@@ -14,6 +14,10 @@
 |                                           Diary_WRITE                                           |                                           Diray_READ                                           |
 |:-----------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------:|
 | ![diary_write](https://github.com/user-attachments/assets/d9aa899d-6aed-4c3d-b692-6ccfd7e3af03) | ![diary_read](https://github.com/user-attachments/assets/096964d9-0ddf-4e6b-adf1-613a64df06df) |
+
+|                                           Book_Search                                           |                                                부적절한 검색어 차단                                                |
+|:-----------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|
+| ![book_search](https://github.com/user-attachments/assets/8d24eb5a-4cce-429d-b19a-711877be39f8) | ![inappropriate_content](https://github.com/user-attachments/assets/c0e38e13-76c6-4e32-be6e-42c855e8ac1b) |
 ## 🚀 실행 방법
 
 1. 프로젝트 클론
