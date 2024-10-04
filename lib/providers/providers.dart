@@ -9,6 +9,7 @@ import '../data/repositories/user_repository.dart';
 import '../ui/view_models/users_view_model.dart';
 import '../ui/view_models/diary_view_model.dart';
 import '../ui/view_models/navigation_view_model.dart';
+import '../ui/view_models/book_view_model.dart';
 
 List<SingleChildWidget> appProviders = [
   // Basic Providers: Provides specific service instances
@@ -36,6 +37,8 @@ List<SingleChildWidget> appProviders = [
   ),
   ChangeNotifierProvider<NavigationViewModel>(
       create: (context) => NavigationViewModel()),
+
+  ChangeNotifierProvider<BookViewModel>(create: (context) => BookViewModel()),
 
   // ChangeNotifierProxyProvider: Uses other providers as dependencies for ChangeNotifier objects
   ChangeNotifierProxyProvider2<DiaryRepository, UsersViewModel, DiaryViewModel>(
