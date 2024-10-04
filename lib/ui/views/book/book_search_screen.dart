@@ -13,7 +13,6 @@ import '../../../data/models/book/book.dart';
 import '../../../core/widgets/circular_back_button.dart';
 import '../../../core/widgets/custom_text.dart';
 import '../../../core/utils/multi_style_text_editing_controller.dart';
-import '../../../data/repositories/book_repository.dart';
 
 //todo :add 버튼 아이템 local state로 관리 -> viewmodel book State에 넘기기
 
@@ -194,8 +193,22 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
             SizedBox(height: 20.h),
             Expanded(
               child: booksResult.isEmpty && userInput.isEmpty
-                  ? Center(
-                      child: Text('Search for book you’ve read to your child.'),
+                  ? Padding(
+                      padding: AppConstants.paddingHorizontal20wVertical10h(),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 50.h),
+                          Image.asset('assets/book_search_placeholder.png'),
+                          SizedBox(height: 10.h),
+                          Center(
+                            child: CustomText(
+                              text:
+                                  'Search for book \nyou’ve read to your child.',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   : Scrollbar(
                       controller: _scrollController,
@@ -235,19 +248,18 @@ class _BookSearchScreenState extends State<BookSearchScreen> {
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(5),
-                                            image: (book.thumbnailUrl != null &&
-                                                    book.thumbnailUrl!
-                                                        .isNotEmpty)
-                                                ? DecorationImage(
-                                                    image: NetworkImage(
-                                                        book.thumbnailUrl!),
-                                                    fit: BoxFit.fill,
-                                                  )
-                                                : DecorationImage(
-                                                    fit: BoxFit.cover,
-                                                    image: AssetImage(
-                                                        'assets/book_placeholder.png'),
-                                                  ),
+                                            image:
+                                                (book.thumbnailUrl.isNotEmpty)
+                                                    ? DecorationImage(
+                                                        image: NetworkImage(
+                                                            book.thumbnailUrl),
+                                                        fit: BoxFit.fill,
+                                                      )
+                                                    : DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: AssetImage(
+                                                            'assets/book_placeholder.png'),
+                                                      ),
                                           ),
                                         ),
                                         SizedBox(width: 35.w),

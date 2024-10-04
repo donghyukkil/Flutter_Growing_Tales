@@ -27,7 +27,7 @@ class LandingPage extends StatelessWidget {
           child: CircularBackButton(
             iconSize: 20.0.w,
             onPressed: () {
-              context.pop();
+              context.go('/statistics');
             },
           ),
         ),
