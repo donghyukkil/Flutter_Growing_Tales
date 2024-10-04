@@ -29,7 +29,7 @@ class UserInfoTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 10.h),
       child: Container(
-        height: 100.h,
+        height: 80.h,
         decoration: BoxDecoration(
           border: showBorder
               ? Border(
@@ -62,7 +62,7 @@ class UserInfoTile extends StatelessWidget {
             SizedBox(width: 15.w),
             CustomCircleAvatar(
               imageUrl: imageUrl,
-              size: 80.r,
+              size: 60.r,
             ),
             SizedBox(
               width: 15.w,

@@ -67,8 +67,9 @@ class UserDiaryTile extends StatelessWidget {
               children: [
                 CustomText(
                   text: diaryContent,
+                  maxLines: 1,
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     Flexible(

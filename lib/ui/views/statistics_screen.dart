@@ -23,153 +23,145 @@ class StatisticsScreen extends StatelessWidget {
       appBar: AppBar(title: Text('Statistics')),
       body: Padding(
         padding: Theme.of(context).paddingHorizontal20Vertical10,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Consumer<UsersViewModel>(
-                builder: (context, userViewModel, child) {
-                  final user = userViewModel.state.user;
+        child: Column(
+          children: [
+            Consumer<UsersViewModel>(
+              builder: (context, userViewModel, child) {
+                final user = userViewModel.state.user;
 
-                  return UserInfoTile(
-                    imageUrl: user?.imageUrl ?? 'assets/dummy1.png',
-                    name: user?.name ?? 'Login plz',
-                    region: user?.region ?? 'Find your loves',
-                    buttonText: user == null ? 'Login' : 'Logout',
-                    onButtonPressed: () {
-                      if (user == null) {
-                        context.go('/landing');
-                      } else {
-                        userViewModel.logout(context);
+                return UserInfoTile(
+                  imageUrl: user?.imageUrl ?? 'assets/dummy1.png',
+                  name: user?.name ?? 'Login plz',
+                  region: user?.region ?? 'Find your loves',
+                  buttonText: user == null ? 'Login' : 'Logout',
+                  onButtonPressed: () {
+                    if (user == null) {
+                      context.go('/landing');
+                    } else {
+                      userViewModel.logout(context);
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Logged out successfully,'),
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
-              ),
-              //todo 사용자 찾기 아이콘 구현하기
-              TableCalendar(
-                focusedDay: DateTime.now(),
-                firstDay: DateTime.now().subtract(
-                  Duration(
-                    days: 30,
-                  ),
-                ),
-                lastDay: DateTime.now().add(
-                  Duration(
-                    days: 30,
-                  ),
-                ),
-                calendarStyle: CalendarStyle(
-                  todayTextStyle:
-                      Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                  todayDecoration: BoxDecoration(
-                    color: AppColors.followButtonColor,
-                    shape: BoxShape.circle,
-                  ),
-                  selectedTextStyle:
-                      Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                  selectedDecoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  cellMargin: EdgeInsets.all(
-                    4.w,
-                  ),
-                ),
-                headerStyle: HeaderStyle(
-                  titleTextStyle:
-                      Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                  formatButtonVisible: false,
-                ),
-                daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontSize: 15.sp,
-                      ),
-                  weekendStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontSize: 15.sp,
-                        color: Colors.red,
-                      ),
-                ),
-              ),
-              SizedBox(
-                height: 25.h,
-              ),
-              Consumer<DiaryViewModel>(
-                builder: (context, diaryViewModel, child) {
-                  final userId =
-                      context.read<UsersViewModel>().currentUser?.id ?? '';
-                  final currentUser = diaryViewModel.state.currentUser;
-                  final diaries = diaryViewModel.state.userDiaries;
-                  final isLoading = diaryViewModel.state.isLoading;
-                  final hasFetchedDiaries = diaryViewModel.hasFetchedDiaries;
-
-                  if (userId.isNotEmpty &&
-                      diaries.isEmpty &&
-                      !isLoading &&
-                      !hasFetchedDiaries) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      diaryViewModel.fetchDiariesIfNeeded(userId);
-                    });
-                  }
-
-                  if (diaries.isEmpty) {
-                    return Center(child: Text('No Diary Found'));
-                  }
-
-                  return CarouselSlider.builder(
-                    itemCount: diaries.length,
-                    itemBuilder: (context, index, realIndex) {
-                      final diary = diaries[index];
-                      final userName = currentUser?.name ?? 'Unknown User';
-                      final userRegion =
-                          currentUser?.region ?? 'Unknown Region';
-
-                      return GestureDetector(
-                        onTap: () {
-                          context.push('/diary_detail', extra: diary);
-                        },
-                        child: UserDiaryTile(
-                          imageUrl: diary.imageUrls.isNotEmpty
-                              ? diary.imageUrls.first
-                              : '',
-                          name: userName,
-                          region: userRegion,
-                          diaryContent: diary.content,
-                          onFollowPressed: () {},
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Logged out successfully,'),
                         ),
                       );
-                    },
-                    options: CarouselOptions(
-                      height: 250.h,
-                      // enlargeCenterPage: true,
-                      autoPlay: true,
-                      aspectRatio: 16 / 9,
-                      enableInfiniteScroll: true,
-                      autoPlayInterval: Duration(seconds: 3),
-                      onPageChanged: (index, reason) {
-                        // print('Page changed to index: $index');
-                      },
-                      viewportFraction: 1,
-                    ),
-                  );
-                },
+                    }
+                  },
+                );
+              },
+            ),
+            //todo 사용자 찾기 아이콘 구현하기
+            TableCalendar(
+              rowHeight: 42.h,
+              focusedDay: DateTime.now(),
+              firstDay: DateTime.now().subtract(
+                Duration(
+                  days: 30,
+                ),
               ),
-            ],
-          ),
+              lastDay: DateTime.now().add(
+                Duration(
+                  days: 30,
+                ),
+              ),
+              calendarStyle: CalendarStyle(
+                todayTextStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                todayDecoration: BoxDecoration(
+                  color: AppColors.followButtonColor,
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle:
+                    Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                cellMargin: EdgeInsets.all(
+                  4.w,
+                ),
+              ),
+              headerStyle: HeaderStyle(
+                titleTextStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                formatButtonVisible: false,
+              ),
+              daysOfWeekStyle: DaysOfWeekStyle(
+                weekdayStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontSize: 15.sp,
+                    ),
+                weekendStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontSize: 15.sp,
+                      color: Colors.red,
+                    ),
+              ),
+            ),
+
+            SizedBox(height: 20.h),
+            Consumer<DiaryViewModel>(
+              builder: (context, diaryViewModel, child) {
+                final userId =
+                    context.read<UsersViewModel>().currentUser?.id ?? '';
+                final currentUser = diaryViewModel.state.currentUser;
+                final diaries = diaryViewModel.state.userDiaries;
+                final isLoading = diaryViewModel.state.isLoading;
+                final hasFetchedDiaries = diaryViewModel.hasFetchedDiaries;
+
+                if (userId.isNotEmpty &&
+                    diaries.isEmpty &&
+                    !isLoading &&
+                    !hasFetchedDiaries) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    diaryViewModel.fetchDiariesIfNeeded(userId);
+                  });
+                }
+
+                if (diaries.isEmpty) {
+                  return Center(child: Text('No Diary Found'));
+                }
+
+                return CarouselSlider.builder(
+                  itemCount: diaries.length,
+                  itemBuilder: (context, index, realIndex) {
+                    final diary = diaries[index];
+                    final userName = currentUser?.name ?? 'Unknown User';
+                    final userRegion = currentUser?.region ?? 'Unknown Region';
+
+                    return GestureDetector(
+                      onTap: () {
+                        context.push('/diary_detail', extra: diary);
+                      },
+                      child: UserDiaryTile(
+                        imageUrl: diary.imageUrls.isNotEmpty
+                            ? diary.imageUrls.first
+                            : '',
+                        name: userName,
+                        region: userRegion,
+                        diaryContent: diary.content,
+                        onFollowPressed: () {},
+                      ),
+                    );
+                  },
+                  options: CarouselOptions(
+                    height: 200.h,
+                    // enlargeCenterPage: true,
+                    autoPlay: true,
+                    aspectRatio: 16 / 9,
+                    enableInfiniteScroll: true,
+                    autoPlayInterval: Duration(seconds: 3),
+                    viewportFraction: 1,
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: CustomBottomNavigationBar(),
