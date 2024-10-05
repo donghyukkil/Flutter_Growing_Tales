@@ -15,9 +15,9 @@
 |:-----------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------:|
 | ![diary_write](https://github.com/user-attachments/assets/d9aa899d-6aed-4c3d-b692-6ccfd7e3af03) | ![diary_read](https://github.com/user-attachments/assets/096964d9-0ddf-4e6b-adf1-613a64df06df) |
 
-|                                           Book_Search                                           |                                                부적절한 검색어 차단                                                |
-|:-----------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|
-| ![book_search](https://github.com/user-attachments/assets/8d24eb5a-4cce-429d-b19a-711877be39f8) | ![inappropriate_content](https://github.com/user-attachments/assets/c0e38e13-76c6-4e32-be6e-42c855e8ac1b) |
+|                                           Book_Search                                           |                                                inappropriate keyword blocking feature                                                |                                       Infiniy Scroll Feature                                        |
+|:-----------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|
+| ![book_search](https://github.com/user-attachments/assets/8d24eb5a-4cce-429d-b19a-711877be39f8) | ![inappropriate_content](https://github.com/user-attachments/assets/c0e38e13-76c6-4e32-be6e-42c855e8ac1b) | ![infinity_scroll](https://github.com/user-attachments/assets/7bce53e3-2f0e-4f07-aebd-f0475c052d3f) |
 ## 🚀 실행 방법
 
 1. 프로젝트 클론
@@ -47,7 +47,9 @@
 ## 기술스택
 
 - Front-end:
-   - Dart, Flutter, Provider, Firebase_auth, Firestore, Firebase_storage, freezed, go_router, screen_utils.
+   - Dart, Flutter, Provider, http
+   - Firebase_auth, Firestore, Firebase_storage, freezed, go_router, screen_utils,permission_handler.
+   - table_calendar, carousel_slider.
 
 <br>
 
